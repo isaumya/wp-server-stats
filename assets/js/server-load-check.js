@@ -66,7 +66,7 @@
 						"width": memory_usage_pos + '%',
 						"background-color": mem_background_color
 					});
-				setTimeout(do_ajax, 200); //After completion of request, time to redo it after a second
+				setTimeout( do_ajax, response.refresh_interval ); //After completion of request, time to redo it after a second
 				if( flag == false) {
 					showUptime( response.uptime );
 					flag = true;

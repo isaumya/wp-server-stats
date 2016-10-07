@@ -32,6 +32,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+
 session_start();
 
 if ( is_admin() ) {	
@@ -39,10 +40,6 @@ if ( is_admin() ) {
 	class wp_server_stats {
 		
 		var $memory = false;
-		
-		/*function wp_server_stats() {
-			return $this->__construct();
-		}*/
 
 		function __construct() {
             add_action( 'init', array (&$this, 'check_limit') );
@@ -51,6 +48,10 @@ if ( is_admin() ) {
 			add_action( 'admin_enqueue_scripts', array (&$this, 'load_admin_scripts') );
 			add_action( 'admin_enqueue_scripts', array (&$this, 'load_admin_styles') );
 			add_action( 'wp_ajax_process_ajax', array (&$this, 'process_ajax') );
+
+			/* First lets initialize an admin settings link inside WP dashboard */
+			/* It will show under the SETTINGS section */
+			add_action( 'admin_menu', array( $this, 'create_admin_menu' ) );
 
 			$this->memory = array();
 		}
@@ -157,6 +158,15 @@ if ( is_admin() ) {
 			if( !isset( $_SESSION['server_load_check_nonce'] ) || !wp_verify_nonce( $_SESSION['server_load_check_nonce'], 'slc_nonce' ) )
 				die( 'Permission Check Failed' );
 
+			/* Lets get the values from the Admin settings page that the user has populated */
+			if( !empty( get_option( 'wp_server_stats_refresh_interval' ) ) ) {
+				// Get the custom refresh interval entered by the user
+				$custom_refresh_interval = get_option( 'wp_server_stats_refresh_interval' );
+			} else {
+				$custom_refresh_interval = 200; //default refresh interval is 200ms
+			}
+
+			/* If Shell is enablelled then execute the CPU Load, Memory Load and Uptime */
 			if( $this->isShellEnabled() ) {
 				$cpu_load = trim( shell_exec("echo $((`ps aux|awk 'NR > 0 { s +=$3 }; END {print s}'| cut -d . -f 1` / `cat /proc/cpuinfo | grep cores | grep -o '[0-9]' | wc -l`))") );
 				$memory_usage_MB = function_exists('memory_get_usage') ? round(memory_get_usage() / 1024 / 1024, 2) : 0;
@@ -166,9 +176,11 @@ if ( is_admin() ) {
 						'cpu_load' => $cpu_load,
 						'memory_usage_MB' => $memory_usage_MB,
 						'memory_usage_pos' => $memory_usage_pos,
-						'uptime' => $uptime
+						'uptime' => $uptime,
+						'refresh_interval' => $custom_refresh_interval
 					);
 				echo json_encode($json_out);
+			/* Otherwise just run the memory load check */
 			} else {
 				$memory_usage_MB = function_exists('memory_get_usage') ? round(memory_get_usage() / 1024 / 1024, 2) : 0;
 				$memory_usage_pos = round ($memory_usage_MB / (int) $this->check_memory_limit_cal() * 100, 0);
@@ -176,7 +188,8 @@ if ( is_admin() ) {
 						'cpu_load' => null,
 						'memory_usage_MB' => $memory_usage_MB,
 						'memory_usage_pos' => $memory_usage_pos,
-						'uptime' => null
+						'uptime' => null,
+						'refresh_interval' => $custom_refresh_interval
 					);
 				echo json_encode($json_out);
 			}
@@ -249,6 +262,69 @@ if ( is_admin() ) {
 			endif;
 		}
 
+		public function create_admin_menu() {
+			/* Now adding the options page */
+			/* using the add_options_page() wp function which takes 5 arguments as follows: 
+			 * Arg 1: Title of the page which will; be shown inside the HTML <title></title> tags
+			 * Arg 2: Name of our sub menu
+			 * Arg 3: Capability (who will see this menua nd can edit the settings)
+			 * Arg 4: Menu Slug, use PHP magic constant
+			 * Arg 5: The function that will display our menu page
+			 * For more, check WP Codex Page: https://codex.wordpress.org/Function_Reference/add_options_page
+			**/
+			add_options_page( 
+				'WP Server Stats - Settings Page', /* Arg 1: Title of the page which will; be shown inside the HTML <title></title> tags */
+				'WP Server Stats', /* Arg 2: Name of our sub menu */
+				'manage_options', /* Arg 3: Capability (who will see this menua nd can edit the settings) */
+				__FILE__, /* Arg 4: Menu Slug, use PHP magic constant */
+				array( 
+					$this, 
+					'admin_page_design' /* Arg 5: The function that will display our menu page */
+				)
+			);
+		}
+
+		/* Now lets create the function to design the admin page */
+		public function admin_page_design() {
+			/* Let's get the $wpdb global object to do database workis */
+			global $wpdb;
+			/* Check if the user has clicked the submit button */
+			if( isset( $_POST['wp_server_stats_settings_save'] ) ) {
+				// OK, It's time to get the refresh interval value the user has entered on the form
+				$refresh_interval = sanitize_text_field( $_POST['refresh_interval'] );
+				// Now push this new refresh interval rate to wp-options table inside your wordpress
+				update_option( 'wp_server_stats_refresh_interval', $refresh_interval );
+			} else {
+				$refresh_interval = get_option( 'wp_server_stats_refresh_interval' );
+			}
+			/* Now lets do the admin page design */
+			?>
+				<div class="wrap">
+					<h1>WP Server Stats Settings</h1>
+					<h3>On this page you will be able to change some critical settings of WP Server Stats</h3>
+					<h4>Please note the below form uses HTML5, so, make sure you are using any of the HTML5 compliance browsers like IE v11+, Microsoft Edge, Chrome v49+, Firefix v47+, Safari v9.1+, Opera v39+</h4>
+					<hr />
+					<form action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>" method="post" accept-charset="utf-8">
+						<table class="form-table">
+							<tbody>
+								<tr valign="top">
+									<th scope="row">
+										<label for="refresh_interval">Set the refresh inverval (in ms) [1sec = 1000ms]</label>
+									</th>
+									<td>
+										<input type="number" name="refresh_interval" value="<?php echo ( !empty( $refresh_interval ) ? $refresh_interval : 200 ); ?>" placeholder="default is 200ms" />
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<p class="submit">
+							<input type="submit" name="wp_server_stats_settings_save" value="Save Changes" class="button-primary" />
+						</p>
+					</form>
+					<p>currently the database holds: <?php echo $refresh_interval;  ?> </p>
+				</div>
+			<?php
+		}
 	}
 
 	// Start this plugin once all other plugins are fully loaded

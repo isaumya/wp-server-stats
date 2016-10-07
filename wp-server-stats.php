@@ -52,6 +52,8 @@ if ( is_admin() ) {
 			/* First lets initialize an admin settings link inside WP dashboard */
 			/* It will show under the SETTINGS section */
 			add_action( 'admin_menu', array( $this, 'create_admin_menu' ) );
+			// Register page options
+    		add_action( 'admin_init', array( $this, 'register_page_options' ) );
 
 			$this->memory = array();
 		}
@@ -289,9 +291,9 @@ if ( is_admin() ) {
 			/* Let's get the $wpdb global object to do database workis */
 			global $wpdb;
 			/* Check if the user has clicked the submit button */
-			if( isset( $_POST['wp_server_stats_settings_save'] ) ) {
+			if( isset( $_POST['submit'] ) ) {
 				// OK, It's time to get the refresh interval value the user has entered on the form
-				$refresh_interval = sanitize_text_field( $_POST['refresh_interval'] );
+				$refresh_interval = sanitize_text_field( $_POST['wpss_settings_options[refresh_interval]'] );
 				// Now push this new refresh interval rate to wp-options table inside your wordpress
 				update_option( 'wp_server_stats_refresh_interval', $refresh_interval );
 			} else {
@@ -305,27 +307,104 @@ if ( is_admin() ) {
 					<h4>Please note the below form uses HTML5, so, make sure you are using any of the HTML5 compliance browsers like IE v11+, Microsoft Edge, Chrome v49+, Firefix v47+, Safari v9.1+, Opera v39+</h4>
 					<hr />
 					<form action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>" method="post" accept-charset="utf-8">
-						<table class="form-table">
-							<tbody>
-								<tr valign="top">
-									<th scope="row">
-										<label for="refresh_interval">Set the refresh inverval (in ms) [1sec = 1000ms]</label>
-									</th>
-									<td>
-										<input type="number" name="refresh_interval" value="<?php echo ( !empty( $refresh_interval ) ? $refresh_interval : 200 ); ?>" placeholder="default is 200ms" />
-									</td>
-								</tr>
-							</tbody>
-						</table>
-						<p class="submit">
-							<input type="submit" name="wp_server_stats_settings_save" value="Save Changes" class="button-primary" />
-						</p>
+						<?php
+							//Populate the admin settings page using WordPress Settings API
+				            settings_fields(__FILE__);      
+				            do_settings_sections(__FILE__);
+				            submit_button();
+				        ?>
 					</form>
 					<p>currently the database holds: <?php echo $refresh_interval;  ?> </p>
 				</div>
 			<?php
 		}
-	}
+
+		/**
+		 * Function that will register admin page options.
+		 */
+		public function register_page_options() { 
+		     
+		    // Add Section for option fields
+		    add_settings_section( 'wpss_section', 'Change the WP Server Stats Settings', array( $this, 'display_section' ), __FILE__ ); // id, title, display cb, page
+		     
+		    // Add Title Field
+		    add_settings_field( 'wpss_refresh_interval_field', 'Set the refresh inverval (in ms) [1sec = 1000ms]', array( $this, 'refresh_interval_settings_field' ), __FILE__, 'wpss_section' ); // id, title, display cb, page, section
+		     
+		    // Add Background Color Field
+		    add_settings_field( 'wpss_bg_field', 'Realtime Status Bar Background Color - For Good Status', array( $this, 'bg_settings_field' ), __FILE__, 'wpss_section' ); // id, title, display cb, page, section
+		     
+		    // Register Settings
+		    register_setting( __FILE__, 'wpss_settings_options', array( $this, 'validate_options' ) ); // option group, option name, sanitize cb 
+		}
+
+		/**
+		 * Functions that display the fields.
+		 */
+		public function refresh_interval_settings_field() { 
+			/* Lets get the values from the Admin settings page that the user has populated */
+			if( !empty( get_option( 'wp_server_stats_refresh_interval' ) ) ) {
+				// Get the custom refresh interval entered by the user
+				$refresh_interval = get_option( 'wp_server_stats_refresh_interval' );
+			} else {
+				$refresh_interval = 200; //default refresh interval is 200ms
+			}
+
+		    echo '<input type="number" name="wpss_settings_options[refresh_interval]" value="' . $refresh_interval  . '" />';
+		}   
+		 
+		public function bg_settings_field() { 
+		     
+		    //$val = ( isset( $this->options['title'] ) ) ? $this->options['background'] : '';
+		    echo '<input type="text" name="wpss_settings_options[background]" value="#ffffff" class="wpss-color-picker" >';
+		     
+		}
+
+		/**
+		 * Function that will validate all fields.
+		 */
+		public function validate_options( $fields ) { 
+		     
+		    $valid_fields = array();
+		     
+		    // Validate Title Field
+		    $refresh_interval = trim( $fields['refresh_interval'] );
+		    $valid_fields['refresh_interval'] = strip_tags( stripslashes( $refresh_interval ) );
+		     
+		    // Validate Background Color
+		    $background = trim( $fields['background'] );
+		    $background = strip_tags( stripslashes( $background ) );
+		     
+		    // Check if is a valid hex color
+		    if( FALSE === $this->check_color( $background ) ) {
+		     
+		        // Set the error message
+		        add_settings_error( 'wpss_settings_options', 'wpss_bg_error', 'Insert a valid color for Background', 'error' ); // $setting, $code, $message, $type
+		         
+		        // Get the previous valid value
+		        $valid_fields['background'] = $this->options['background'];
+		     
+		    } else {
+		     
+		        $valid_fields['background'] = $background;  
+		     
+		    }
+		     
+		    return apply_filters( 'validate_options', $valid_fields, $fields);
+		}
+		 
+		/**
+		 * Function that will check if value is a valid HEX color.
+		 */
+		public function check_color( $value ) { 
+		     
+		    if ( preg_match( '/^#[a-f0-9]{6}$/i', $value ) ) { // if user insert a HEX color with #     
+		        return true;
+		    }
+		     
+		    return false;
+		}
+
+	} //end of class
 
 	// Start this plugin once all other plugins are fully loaded
 	add_action( 'plugins_loaded', create_function('', '$memory = new wp_server_stats();') );

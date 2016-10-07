@@ -1,18 +1,24 @@
-# wp-server-stats
+# WP Server Stats
+
+Monitor your WordPress site the right way with most important server stats like memory usage, CPU load, uptime &amp; more.
 
 Contributors: isaumya
+
 Author URI: https://www.isaumya.com
+
 Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
+
 Donate link: http://donate.isaumya.com/
+
 Tags: dashboard, widget, server, stats, information, admin, isaumya
+
 Requires at least: 4.1
+
 Tested up to: 4.6
 
 Stable Tag: 1.2.1
 
 License: MIT
-
-Monitor your WordPress site the right way with most important server stats like memory usage, CPU load, uptime &amp; more.
 
 # Description
 
@@ -68,10 +74,10 @@ If you like this plugin please don't forget to write a review and if possible pl
 
 # Screenshots
 
-[![Dashboard - for people who have PHP `shell_exec()` function enabled & executable on their server](https://ps.w.org/wp-server-stats/assets/screenshot-1.jpg)](https://ps.w.org/wp-server-stats/assets/screenshot-1.jpg)
+[![Dashboard - for people who have PHP `shell_exec()` function enabled & executable on their server](https://i.imgur.com/5AnxUqr.jpg)](https://i.imgur.com/5AnxUqr.jpg)
 Dashboard - for people **who have** PHP `shell_exec()` function enabled & executable on their server
 
-[![Dashboard - for people who does NOT have PHP `shell_exec()` function enabled or executable on their server](https://ps.w.org/wp-server-stats/assets/screenshot-2.png)](https://ps.w.org/wp-server-stats/assets/screenshot-2.png)
+[![Dashboard - for people who does NOT have PHP `shell_exec()` function enabled or executable on their server](https://i.imgur.com/RAAoFLJ.png)](https://i.imgur.com/RAAoFLJ.png)
 Dashboard - for people who **does NOT have** PHP `shell_exec()` function enabled or executable on their server
 
 

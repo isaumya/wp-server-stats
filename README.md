@@ -84,6 +84,10 @@ Dashboard - for people **who have** PHP `shell_exec()` function enabled & execut
 
 Dashboard - for people who **does NOT have** PHP `shell_exec()` function enabled or executable on their server
 
+[![WP Server Stats Admin Settings Page](https://i.imgur.com/CTek2cr.jpg)](https://i.imgur.com/CTek2cr.jpg)
+
+WP Server Stats Admin Settings Page (since v1.3.1)
+
 
 ## Installation
 

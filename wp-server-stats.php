@@ -3,16 +3,15 @@
 Plugin Name: WP Server Stats
 Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
-Donate link: http://donate.isaumya.com/
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.3.1
-Tags: dashboard, widget, server, stats, information, admin
+Version: 1.3.2
 Text Domain: wp-server-stats
-Requires at least: 4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+*/
 
+/*
 Copyright 2012-2016 by Saumya Majumder 
 
 This program is free software; you can redistribute it and/or modify
@@ -28,7 +27,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
 */
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
@@ -330,9 +328,9 @@ if ( is_admin() ) {
 			/* Now lets do the admin page design */
 			?>
 				<div class="wrap">
-					<h1>WP Server Stats Settings</h1>
-					<h3>On this page you will be able to change some critical settings of WP Server Stats</h3>
-					<h4>Please note the below form uses HTML5, so, make sure you are using any of the HTML5 compliance browsers like IE v11+, Microsoft Edge, Chrome v49+, Firefix v47+, Safari v9.1+, Opera v39+</h4>
+					<h1><?php _e( 'WP Server Stats Settings', 'wp-server-stats' ); ?></h1>
+					<h3><?php _e( 'On this page you will be able to change some critical settings of WP Server Stats', 'wp-server-stats' ); ?></h3>
+					<h4><?php _e( 'Please note the below form uses HTML5, so, make sure you are using any of the HTML5 compliance browsers like IE v11+, Microsoft Edge, Chrome v49+, Firefix v47+, Safari v9.1+, Opera v39+', 'wp-server-stats' ); ?></h4>
 					<hr />
 					<div id="wpss-main">
 						<form action="options.php" method="post" accept-charset="utf-8">
@@ -564,7 +562,7 @@ if ( is_admin() ) {
 							),
 							admin_url('options-general.php')
 						),
-						__("Settings")
+						__("Settings", "wp-server-stats")
 					)
 				)
 			);

@@ -102,6 +102,10 @@ So, in WordPress remo the plugin version number will follow like this **X.X.X**,
 ## Changelog
 ### 1.3.1, October 8, 2016
 
+* Minor bug fix & translation improvement
+
+### 1.3.1, October 8, 2016
+
 * Major release with a bunch of code improvement
 * Now the plugin has it's own admin settings menu found inside Settings > WP Server Stats, from where users can easily tweak the various aspect of the plugin
 * Support WordPress's native colorpicker inside WP Admin Menu

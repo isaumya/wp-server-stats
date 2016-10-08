@@ -100,7 +100,7 @@ WP Server Stats Admin Settings Page (since v1.3.1)
 So, in WordPress remo the plugin version number will follow like this **X.X.X**, whereas in Github the version number with follow like this **X.X.X.X** where the last **X** denotes beta phase
 
 ## Changelog
-### 1.3.1, October 8, 2016
+### 1.3.2, October 8, 2016
 
 * Minor bug fix & translation improvement
 

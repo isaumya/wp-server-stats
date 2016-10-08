@@ -1,0 +1,35 @@
+/* WP Server Stats
+ * Author: Saumya Majumder
+ * Author URI: https://www.isaumya.com
+ * License: MIT
+**/
+@media( min-width: 961px ) {
+	#wpss-main {
+		float: left;
+		width: 69%;
+	}
+	#wpss-sidebar {
+		float: right;
+		width: 30%;
+		display: block !important;
+	}
+}
+@media( max-width: 960px ) {
+	#wpss-main {
+		width: 100%;
+	}
+	#wpss-sidebar {
+		width: 0%;
+		dispaly: none !important;
+	}
+}
+.highlight {
+	color: inherit;
+    padding: 5px;
+    background: #faf3c4;
+}
+.center {
+	margin-left: auto !important;
+	margin-right: auto !important;
+	display: table !important;
+}

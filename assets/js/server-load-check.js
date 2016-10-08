@@ -23,11 +23,11 @@
 						});
 					}
 					if( load > 80 ) {
-						var background_color = '#d35400';
+						var background_color = response.bg_color_average;
 					} else if ( load > 95 ) {
-						var background_color = '#e74c3c';
+						var background_color = response.bg_color_bad;
 					} else {
-						var background_color = '#37BF91';
+						var background_color = response.bg_color_good;
 					}
 					$('#server-load-upper-div').css({
 						"width": load + '%',
@@ -56,11 +56,11 @@
 						});
 					}
 					if( memory_usage_pos > 80 ) {
-						var mem_background_color = '#d35400';
+						var mem_background_color = response.bg_color_average;
 					} else if ( memory_usage_pos > 95 ) {
-						var mem_background_color = '#e74c3c';
+						var mem_background_color = response.bg_color_bad;
 					} else {
-						var mem_background_color = '#37BF91';
+						var mem_background_color = response.bg_color_good;
 					}
 					$('#memory-load-upper-div').css({
 						"width": memory_usage_pos + '%',
@@ -85,7 +85,12 @@
 
 	});
 
-	 $(window).resize(function () {
+	$(function() {
+        // Add Color Picker to all inputs that have 'color-field' class
+        $( '.wpss-color-picker' ).wpColorPicker();
+    });
+
+	$(window).resize(function () {
         var browserWidth = $( window ).width();
 		//console.log('width ' + browserWidth);
 		if ( browserWidth > 1800 ) {

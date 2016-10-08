@@ -1,24 +1,24 @@
 # WP Server Stats
 
+![WP Server Stats Banner](https://i.imgur.com/JSonC5R.png)
+
 Monitor your WordPress site the right way with most important server stats like memory usage, CPU load, uptime &amp; more.
 
-Contributors: isaumya
+**Contributors:** isaumya
 
-Author URI: https://www.isaumya.com
+**Author URI:** https://www.isaumya.com
 
-Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
+**Plugin URI:** https://www.isaumya.com/portfolio-item/wp-server-stats/
 
-Donate link: http://donate.isaumya.com/
+**Donate link:** http://donate.isaumya.com/
 
-Tags: dashboard, widget, server, stats, information, admin, isaumya
+**Requires at least:** 4.1
 
-Requires at least: 4.1
+**Tested up to:** 4.6.1
 
-Tested up to: 4.6
+**Stable Tag:** 1.3.1
 
-Stable Tag: 1.2.1
-
-License: MIT
+**License:** MIT
 
 ## Description
 
@@ -52,6 +52,8 @@ I currently has no plan to add Windows Server support as a very tiny amount of p
 ## ERROR Code List
 
 **EXEC096T** - PHP `shell_exec()` function has not been enabled in your account, which this plugin highly needs to run properly. So contact your server host and ask them to enable PHP `shell_exec()` function for your account.
+
+**IP096T** - Your server is not returning the IP properly. There is definately some issue with your server configuration. Please contact your host and tell then that PHP `gethostbyname( gethostname() )` is unable to get the server IP, ask them to look into thier server configuration and to fix the configuration issue. If you have a self hosted VPS or dedicated server, the reason is still the same. If you are unable to find the configuartion issue inside your server, I highly suggest you to hire a knowledgable server admin to look into your server. In most cases you should never get this error message.
 
 ## Languages
 
@@ -94,6 +96,15 @@ Dashboard - for people who **does NOT have** PHP `shell_exec()` function enabled
 So, in WordPress remo the plugin version number will follow like this **X.X.X**, whereas in Github the version number with follow like this **X.X.X.X** where the last **X** denotes beta phase
 
 ## Changelog
+### 1.3.1, October 8, 2016
+
+* Major release with a bunch of code improvement
+* Now the plugin has it's own admin settings menu found inside Settings > WP Server Stats, from where users can easily tweak the various aspect of the plugin
+* Support WordPress's native colorpicker inside WP Admin Menu
+* Option to change script refresh interval along with various color options
+* Most major release since the first release of the plugin
+* This plugin is now added in [Github Repo](https://github.com/isaumya/wp-server-stats) for more streamlined development
+
 ### 1.2.1, June 24, 2016
 
 * Major bug fix with the new shell ececution logic improvement

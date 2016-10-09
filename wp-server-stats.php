@@ -542,6 +542,7 @@ if ( is_admin() ) {
 				$this->bg_color_bad = "#e74c3c";
 				$this->footer_text_color = "#8e44ad";
 			}
+			return null;
 		}
 
 		// Adding the `Settings Option beside Edit & Deactivation link inside WP Dashboard's Installed Plugin Page

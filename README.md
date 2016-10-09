@@ -16,7 +16,7 @@ Monitor your WordPress site the right way with most important server stats like 
 
 **Tested up to:** 4.6.1
 
-**Stable Tag:** 1.3.1
+**Stable Tag:** 1.3.2
 
 **License:** MIT
 

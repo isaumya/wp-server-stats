@@ -497,9 +497,10 @@ if ( is_admin() ) {
 		public function fetch_data() {
 			// assuming our wpss_settings_option entry in database's option table is already there
 			// so lets try to fetch it
-			if( !empty( get_option( 'wpss_settings_options' ) ) ) {
-
-				$fetched_data = get_option( 'wpss_settings_options' ); // $fetched_data will be an array
+			// As prior to PHP v5.5 empty() doesn't support anything but a variable, so calling a function 
+			// inside empty() will yeild an error. So, first get the data into a variable then pass the var to empty()
+			$fetched_data = get_option( 'wpss_settings_options' ); // $fetched_data will be an array
+			if( !empty( $fetched_data ) ) {
 
 				// fetching the refresh_interval data
 				if( !empty( $fetched_data['refresh_interval'] ) ) {

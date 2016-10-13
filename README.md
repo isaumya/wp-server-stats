@@ -68,6 +68,7 @@ The list of people whom I wanna specially thanks without whom this plugin would 
 * [Justin Kimbrell](https://twitter.com/justin_kimbrell) for [FlipClock.js](http://flipclockjs.com/)
 * Alex Rabe
 * Vlad from [ip-api.com](http://ip-api.com/)
+* [Lester Chan](https://twitter.com/gamerz)
 
 
 ## Support the Plugin
@@ -100,6 +101,13 @@ WP Server Stats Admin Settings Page (since v1.3.1)
 So, in WordPress remo the plugin version number will follow like this **X.X.X**, whereas in Github the version number with follow like this **X.X.X.X** where the last **X** denotes beta phase
 
 ## Changelog
+### 1.3.3.1, October 14, 2016
+
+* Most major release till date
+* Added a lot more server information
+* Added special admin menu & pages to show up all PHP & database & memcache details
+* Memcache details will only show if memcache is enabled on the server
+
 ### 1.3.3, October 9, 2016
 
 * Fix compatibility issue & Fatal Errors with PHP version prior to v5.5

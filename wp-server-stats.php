@@ -5,7 +5,7 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.4.0.1
+Version: 1.4.1
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -755,6 +755,7 @@ if ( is_admin() ) {
 		/* Function to show up Memcache details */
 		public function memcache_details() {
 			if( class_exists( 'Memcache' ) ) {
+				$this->fetch_data(); //fetching data
 				$memcached_obj = new Memcache;
 				$memcached_obj->addServer( $this->memcache_host, $this->memcache_port );
 				$memcachedinfo = $memcached_obj->getStats();
@@ -1156,9 +1157,9 @@ if ( is_admin() ) {
 		public function fetch_data() {
 			// assuming our wpss_settings_option entry in database's option table is already there
 			// so lets try to fetch it
-			if( !empty( get_option( 'wpss_settings_options' ) ) ) {
+			$fetched_data = get_option( 'wpss_settings_options' ); // $fetched_data will be an array
 
-				$fetched_data = get_option( 'wpss_settings_options' ); // $fetched_data will be an array
+			if( !empty( $fetched_data ) ) {
 
 				// fetching the refresh_interval data
 				if( !empty( $fetched_data['refresh_interval'] ) ) {

@@ -16,7 +16,7 @@ Monitor your WordPress site the right way with most important server stats like 
 
 **Tested up to:** 4.6.1
 
-**Stable Tag:** 1.4.0.1 (Github version)
+**Stable Tag:** 1.4.1
 
 **License:** MIT
 
@@ -135,6 +135,9 @@ Page to show up more in-depth details about your Database server
 So, in WordPress remo the plugin version number will follow like this **X.X.X**, whereas in Github the version number with follow like this **X.X.X.X** where the last **X** denotes beta phase
 
 ## Changelog
+### 1.4.0, October 14, 2016
+* Minor bug fix and old php version compatibility added
+
 ### 1.4.0, October 14, 2016
 * Added ability to show up server OS
 * Added ability to show up server software

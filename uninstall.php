@@ -27,3 +27,5 @@ delete_transient( 'wpss_db_disk_usage' );
 delete_transient( 'wpss_db_index_disk_usage' );
 delete_transient( 'wpss_php_max_upload_size' );
 delete_transient( 'wpss_php_max_post_size' );
+
+delete_site_transient( 'wpss-donate-notice-forever' );

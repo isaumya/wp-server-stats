@@ -5,7 +5,7 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.4.3
+Version: 1.4.4
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -1268,6 +1268,7 @@ if ( is_admin() ) {
 			delete_transient( 'wpss_db_index_disk_usage' );
 			delete_transient( 'wpss_php_max_upload_size' );
 			delete_transient( 'wpss_php_max_post_size' );
+			delete_site_transient( 'wpss-donate-notice-forever' );
 		}
 
 	} //end of class

@@ -5,7 +5,7 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.4.1
+Version: 1.4.3
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -61,6 +61,9 @@ if ( is_admin() ) {
     		add_action( 'admin_init', array( $this, 'register_page_options' ) );
     		// Admin notice
     		add_action( 'admin_notices', array( $this, 'show_admin_notice' ) );
+    		// Inserting the wordpress proper dismissal class
+    		require_once __DIR__ . '/vendor/persist-admin-notices-dismissal/persist-admin-notices-dismissal.php';
+    		add_action( 'admin_init', array( 'PAnD', 'init' ) );
 
     		register_uninstall_hook( 'wp_server_stats' , array( $this, 'handle_uninstall_hook' ) );
 
@@ -1140,6 +1143,10 @@ if ( is_admin() ) {
 
 		public function show_admin_notice() {
 			settings_errors( 'wpss_settings_options' );
+			//Making sure the following welcome notice doesn't show up after closing it
+			if( ! PAnD::is_admin_notice_active( 'wpss-donate-notice-forever' ) ) {
+				return;
+			}
 			$class = 'notice notice-success is-dismissible donate_notice';
 			$message = sprintf( 
 							__('%1$sThank you%2$s for installing %1$sWP Server Stats%2$s. It took countless hours to code, design, test and include many useful server info that you like so much to show up in your WordPress dashboard. But as this is a <strong>free plugin</strong>, all of these time and effort does not generate any revenue. Also as I\'m not a very privileged person, so earning revenue matters to me for keeping my lights on and keep me motivated to do the work I love. %3$s So, if you enjoy this plugin and understand the huge effort I put into this, please consider %1$s%4$sdonating some amount%5$s (no matter how small)%2$s for keeping aliave the development of this plugin. Thank you again for using my plugin. Also if you love using this plugin, I would really appiciate if you take 2 minutes out of your busy schedule to %1$s%6$sshare your review%7$s%2$s about this plugin.', 'wp-server-stats'),
@@ -1148,7 +1155,7 @@ if ( is_admin() ) {
 							'<a href="https://goo.gl/V41y3K" target="_blank" rel="external" title="WP Server Stats - Plugin Donation">', '</a>',
 							'<a href="https://wordpress.org/support/plugin/wp-server-stats/reviews/" target="_blank" rel="external" title="WP Server Stats - Post your Plugin Review">', '</a>'
 						);
-			printf( '<div class="%1$s"><p>%2$s</p></div>', $class, $message );
+			printf( '<div data-dismissible="wpss-donate-notice-forever" class="%1$s"><p>%2$s</p></div>', $class, $message );
 		}
 
 		/**

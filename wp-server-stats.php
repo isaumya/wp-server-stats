@@ -5,7 +5,7 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.3.2
+Version: 1.4.0
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -400,7 +400,7 @@ if ( is_admin() ) {
 		public function load_admin_scripts() {
 			/* CSS Calls */
 			wp_enqueue_style('flipclock', plugin_dir_url( __FILE__ ) . 'assets/css/flipclock.min.css', array(), '0.7.3');
-			wp_enqueue_style('wp-server-stats-admin', plugin_dir_url( __FILE__ ) . 'assets/css/wp-server-stats-admin.css', array(), '1.0.0');
+			wp_enqueue_style('wp-server-stats-admin', plugin_dir_url( __FILE__ ) . 'assets/css/wp-server-stats-admin.min.css', array(), '1.0.0');
 			// CSS rules for Color Picker
     		wp_enqueue_style( 'wp-color-picker' );
 
@@ -687,27 +687,27 @@ if ( is_admin() ) {
 					<tbody>
 						<tr>
 							<td class="e"><?php _e('Database Software', 'wp-server-stats'); ?></td>
-							<td><?php echo $this->database_software(); ?></td>
+							<td class="v"><?php echo $this->database_software(); ?></td>
 						</tr>
 						<tr>
 							<td class="e"><?php _e('Database Version', 'wp-server-stats'); ?></td>
-							<td><?php echo $this->database_version(); ?></td>
+							<td class="v"><?php echo $this->database_version(); ?></td>
 						</tr>
 						<tr>
 							<td class="e"><?php _e('Maximum No. of Connections', 'wp-server-stats'); ?></td>
-							<td><?php echo $this->database_max_no_connection(); ?></td>
+							<td class="v"><?php echo $this->database_max_no_connection(); ?></td>
 						</tr>
 						<tr>
 							<td class="e"><?php _e('Maximum Packet Size', 'wp-server-stats'); ?></td>
-							<td><?php echo $this->database_max_packet_size(); ?></td>
+							<td class="v"><?php echo $this->database_max_packet_size(); ?></td>
 						</tr>
 						<tr>
 							<td class="e"><?php _e('Database Disk Usage', 'wp-server-stats'); ?></td>
-							<td><?php echo $this->database_disk_usage(); ?></td>
+							<td class="v"><?php echo $this->database_disk_usage(); ?></td>
 						</tr>
 						<tr>
 							<td class="e"><?php _e('Index Disk Usage', 'wp-server-stats'); ?></td>
-							<td><?php echo $this->index_disk_usage(); ?></td>
+							<td class="v"><?php echo $this->index_disk_usage(); ?></td>
 						</tr>
 					</tbody>
 				</table>
@@ -788,154 +788,154 @@ if ( is_admin() ) {
 						</tfoot>
 						<tbody>
 							<tr>
-								<td><?php _e( 'pid', 'wp-server-stats' ); ?></td>
-								<td><?php echo $memcachedinfo['pid']; ?></td>
-								<td><?php _e( 'Process ID', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'pid', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo $memcachedinfo['pid']; ?></td>
+								<td class="v"><?php _e( 'Process ID', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'vptime', 'wp-server-stats' ); ?></td>
-								<td><?php echo $uptime; ?></td>
-								<td><?php _e( 'Number of days since the process was started', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'vptime', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo $uptime; ?></td>
+								<td class="v"><?php _e( 'Number of days since the process was started', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'version', 'wp-server-stats' ); ?></td>
-								<td><?php echo $memcachedinfo['version']; ?></td>
-								<td><?php _e( 'Memcached Version', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'version', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo $memcachedinfo['version']; ?></td>
+								<td class="v"><?php _e( 'Memcached Version', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'rusage_user', 'wp-server-stats' ); ?></td>
-								<td><?php echo $memcachedinfo['rusage_user']; ?></td>
-								<td><?php _e( 'Number of seconds the cpu has devoted to the process as the user', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'rusage_user', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo $memcachedinfo['rusage_user']; ?></td>
+								<td class="v"><?php _e( 'Number of seconds the cpu has devoted to the process as the user', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'rusage_system', 'wp-server-stats' ); ?></td>
-								<td><?php echo $memcachedinfo['rusage_system']; ?></td>
-								<td><?php _e( 'Number of seconds the cpu has devoted to the process as the system', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'rusage_system', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo $memcachedinfo['rusage_system']; ?></td>
+								<td class="v"><?php _e( 'Number of seconds the cpu has devoted to the process as the system', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'curr_items', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['curr_items'] ); ?></td>
-								<td><?php _e( 'Total number of items currently in memcached', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'curr_items', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['curr_items'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of items currently in memcached', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'total_items', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['total_items'] ); ?></td>
-								<td><?php _e( 'Total number of items that have passed through memcached', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'total_items', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['total_items'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of items that have passed through memcached', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'bytes', 'wp-server-stats' ); ?></td>
-								<td><?php echo $this->format_filesize( $memcachedinfo['bytes'] ); ?></td>
-								<td><?php _e( 'Memory size currently used by <code>curr_items</code>', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'bytes', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo $this->format_filesize( $memcachedinfo['bytes'] ); ?></td>
+								<td class="v"><?php _e( 'Memory size currently used by <code>curr_items</code>', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'limit_maxbytes', 'wp-server-stats' ); ?></td>
-								<td><?php echo $this->format_filesize( $memcachedinfo['limit_maxbytes'] ); ?></td>
-								<td><?php _e( 'Maximum memory size allocated to memcached', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'limit_maxbytes', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo $this->format_filesize( $memcachedinfo['limit_maxbytes'] ); ?></td>
+								<td class="v"><?php _e( 'Maximum memory size allocated to memcached', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'curr_connections', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['curr_connections'] ); ?></td>
-								<td><?php _e( 'Total number of open connections to memcached', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'curr_connections', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['curr_connections'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of open connections to memcached', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'total_connections', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['total_connections'] ); ?></td>
-								<td><?php _e( 'Total number of connections opened since memcached started running', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'total_connections', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['total_connections'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of connections opened since memcached started running', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'connection_structures', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['connection_structures'] ); ?></td>
-								<td><?php _e( 'Number of connection structures allocated by the server', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'connection_structures', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['connection_structures'] ); ?></td>
+								<td class="v"><?php _e( 'Number of connection structures allocated by the server', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'cmd_get', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['cmd_get'] ); ?></td>
-								<td><?php _e( 'Total GET commands issued to the server', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'cmd_get', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['cmd_get'] ); ?></td>
+								<td class="v"><?php _e( 'Total GET commands issued to the server', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'cmd_set', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['cmd_set'] ); ?></td>
-								<td><?php _e( 'Total SET commands issued to the server', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'cmd_set', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['cmd_set'] ); ?></td>
+								<td class="v"><?php _e( 'Total SET commands issued to the server', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'cmd_flush', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['cmd_flush'] ); ?></td>
-								<td><?php _e( 'Total FLUSH commands issued to the server', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'cmd_flush', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['cmd_flush'] ); ?></td>
+								<td class="v"><?php _e( 'Total FLUSH commands issued to the server', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'get_hits', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['get_hits'] ) . '(' . $cache_hit . '%)'; ?></td>
-								<td><?php _e( 'Total number of times a GET command was <strong>able</strong> to retrieve and return data', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'get_hits', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['get_hits'] ) . '(' . $cache_hit . '%)'; ?></td>
+								<td class="v"><?php _e( 'Total number of times a GET command was <strong>able</strong> to retrieve and return data', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'get_misses', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['get_misses'] ) . '(' . $cache_miss . '%)'; ?></td>
-								<td><?php _e( 'Total number of times a GET command was <strong>unable</strong> to retrieve and return data', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'get_misses', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['get_misses'] ) . '(' . $cache_miss . '%)'; ?></td>
+								<td class="v"><?php _e( 'Total number of times a GET command was <strong>unable</strong> to retrieve and return data', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'delete_hits', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['delete_hits'] ); ?></td>
-								<td><?php _e( 'Total number of times a DELETE command was <strong>able</strong> to delete data', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'delete_hits', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['delete_hits'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of times a DELETE command was <strong>able</strong> to delete data', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'delete_misses', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['delete_misses'] ); ?></td>
-								<td><?php _e( 'Total number of times a DELETE command was <strong>unable</strong> to delete data', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'delete_misses', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['delete_misses'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of times a DELETE command was <strong>unable</strong> to delete data', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'incr_hits', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['incr_hits'] ); ?></td>
-								<td><?php _e( 'Total number of times a INCR command was <strong>able</strong> to increment a value', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'incr_hits', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['incr_hits'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of times a INCR command was <strong>able</strong> to increment a value', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'incr_misses', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['incr_misses'] ); ?></td>
-								<td><?php _e( 'Total number of times a INCR command was <strong>unable</strong> to increment a value', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'incr_misses', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['incr_misses'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of times a INCR command was <strong>unable</strong> to increment a value', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'decr_hits', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['decr_hits'] ); ?></td>
-								<td><?php _e( 'Total number of times a DECR command was <strong>able</strong> to decrement a value', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'decr_hits', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['decr_hits'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of times a DECR command was <strong>able</strong> to decrement a value', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'decr_misses', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['decr_misses'] ); ?></td>
-								<td><?php _e( 'Total number of times a DECR command was <strong>unable</strong> to decrement a value', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'decr_misses', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['decr_misses'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of times a DECR command was <strong>unable</strong> to decrement a value', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'cas_hits', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['cas_hits'] ); ?></td>
-								<td><?php _e( 'Total number of times a CAS command was <strong>able</strong> to compare and swap data', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'cas_hits', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['cas_hits'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of times a CAS command was <strong>able</strong> to compare and swap data', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'cas_misses', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['cas_misses'] ); ?></td>
-								<td><?php _e( 'Total number of times a CAS command was <strong>unable</strong> to compare and swap data', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'cas_misses', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['cas_misses'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of times a CAS command was <strong>unable</strong> to compare and swap data', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'cas_badval', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['cas_badval'] ); ?></td>
-								<td><?php _e( 'The "cas" command is some kind of Memcached\'s way to avoid locking. "cas" calls with bad identifier are counted in this stats key', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'cas_badval', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['cas_badval'] ); ?></td>
+								<td class="v"><?php _e( 'The "cas" command is some kind of Memcached\'s way to avoid locking. "cas" calls with bad identifier are counted in this stats key', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'bytes_read', 'wp-server-stats' ); ?></td>
-								<td><?php echo $this->format_filesize( $memcachedinfo['bytes_read'] ); ?></td>
-								<td><?php _e( 'Total number of bytes input into the server', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'bytes_read', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo $this->format_filesize( $memcachedinfo['bytes_read'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of bytes input into the server', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'bytes_written', 'wp-server-stats' ); ?></td>
-								<td><?php echo $this->format_filesize( $memcachedinfo['bytes_written'] ); ?></td>
-								<td><?php _e( 'Total number of bytes written by the server', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'bytes_written', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo $this->format_filesize( $memcachedinfo['bytes_written'] ); ?></td>
+								<td class="v"><?php _e( 'Total number of bytes written by the server', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'evictions', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['evictions'] ); ?></td>
-								<td><?php _e( 'Number of valid items removed from cache to free memory for new items', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'evictions', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['evictions'] ); ?></td>
+								<td class="v"><?php _e( 'Number of valid items removed from cache to free memory for new items', 'wp-server-stats' ); ?></td>
 							</tr>
 							<tr>
-								<td><?php _e( 'reclaimed', 'wp-server-stats' ); ?></td>
-								<td><?php echo number_format_i18n( $memcachedinfo['reclaimed'] ); ?></td>
-								<td><?php _e( 'Number of items reclaimed', 'wp-server-stats' ); ?></td>
+								<td class="e"><?php _e( 'reclaimed', 'wp-server-stats' ); ?></td>
+								<td class="v"><?php echo number_format_i18n( $memcachedinfo['reclaimed'] ); ?></td>
+								<td class="v"><?php _e( 'Number of items reclaimed', 'wp-server-stats' ); ?></td>
 							</tr>
 						</tbody>
 					</table>
@@ -1139,6 +1139,15 @@ if ( is_admin() ) {
 
 		public function show_admin_notice() {
 			settings_errors( 'wpss_settings_options' );
+			$class = 'notice notice-success is-dismissible donate_notice';
+			$message = sprintf( 
+							__('%1$sThank you%2$s for installing %1$sWP Server Stats%2$s. It took countless hours to code, design, test and include many useful server info that you like so much to show up in your WordPress dashboard. But as this is a <strong>free plugin</strong>, all of these time and effort does not generate any revenue. Also as I\'m not a very privileged person, so earning revenue matters to me for keeping my lights on and keep me motivated to do the work I love. %3$s So, if you enjoy this plugin and understand the huge effort I put into this, please consider %1$s%4$sdonating some amount%5$s (no matter how small)%2$s for keeping aliave the development of this plugin. Thank you again for using my plugin. Also if you love using this plugin, I would really appiciate if you take 2 minutes out of your busy schedule to %1$s%6$sshare your review%7$s%2$s about this plugin.', 'wp-server-stats'),
+							'<strong>', '</strong>',
+							'<br /> <br />',
+							'<a href="https://goo.gl/V41y3K" target="_blank" rel="external" title="WP Server Stats - Plugin Donation">', '</a>',
+							'<a href="https://wordpress.org/support/plugin/wp-server-stats/reviews/" target="_blank" rel="external" title="WP Server Stats - Post your Plugin Review">', '</a>'
+						);
+			printf( '<div class="%1$s"><p>%2$s</p></div>', $class, $message );
 		}
 
 		/**

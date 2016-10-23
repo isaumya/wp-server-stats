@@ -5,7 +5,7 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.4.4
+Version: 1.4.5
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -61,13 +61,12 @@ if ( is_admin() ) {
     		add_action( 'admin_init', array( $this, 'register_page_options' ) );
     		// Admin notice
     		add_action( 'admin_notices', array( $this, 'show_admin_notice' ) );
+
+			$this->memory = array();
+
     		// Inserting the wordpress proper dismissal class
     		require_once __DIR__ . '/vendor/persist-admin-notices-dismissal/persist-admin-notices-dismissal.php';
     		add_action( 'admin_init', array( 'PAnD', 'init' ) );
-
-    		register_uninstall_hook( 'wp_server_stats' , array( $this, 'handle_uninstall_hook' ) );
-
-			$this->memory = array();
 		}
         
         public function check_limit() {
@@ -491,7 +490,7 @@ if ( is_admin() ) {
 					<?php endif; ?>
 					<?php if( class_exists( 'Memcache' ) ) : ?>
 						<div class="wpss_show_buttons content-center">
-							<a href="<?php echo get_admin_url(); ?>admin.php?page=wpss_memcache_info" title="Checkout Memcached Info" class="wpss_btn button button-small"><?php _e( 'Checkout Memcached Info', 'wp-server-stats' ); ?></a>
+							<a href="<?php echo get_admin_url(); ?>admin.php?page=wpss_memcache_info" title="Checkout Memcached Info" class="wpss_btn button button-small"><?php _e( 'Check More Memcached Info', 'wp-server-stats' ); ?></a>
 						</div>
 					<?php endif; ?>
 					<hr />
@@ -504,7 +503,7 @@ if ( is_admin() ) {
 						<li><strong><?php _e('Index Disk Usage', 'wp-server-stats'); ?></strong> : <span><?php echo $this->index_disk_usage(); ?></span></li>
 					</ul>
 					<div class="wpss_show_buttons content-center">
-						<a href="<?php echo get_admin_url(); ?>admin.php?page=wpss_sql_info" title="Checkout More Database Info" class="wpss_btn button button-small"><?php _e( 'Checkout More Database Info', 'wp-server-stats' ); ?></a>
+						<a href="<?php echo get_admin_url(); ?>admin.php?page=wpss_sql_info" title="Checkout More Database Info" class="wpss_btn button button-small"><?php _e( 'Check More Database Info', 'wp-server-stats' ); ?></a>
 					</div>
 					<hr />
 					<ul>
@@ -525,7 +524,7 @@ if ( is_admin() ) {
 						</div>
 					</div>
 					<div class="wpss_show_buttons content-center">
-						<a href="<?php echo get_admin_url(); ?>admin.php?page=wpss_php_info" title="Checkout More PHP Info" class="wpss_btn button button-small"><?php _e( 'Checkout More PHP Info', 'wp-server-stats' ); ?></a>
+						<a href="<?php echo get_admin_url(); ?>admin.php?page=wpss_php_info" title="Checkout More PHP Info" class="wpss_btn button button-small"><?php _e( 'Check More PHP Info', 'wp-server-stats' ); ?></a>
 					</div>
 					<?php if( $this->isShellEnabled() ) : ?>
 					<hr style="margin-top: 15px; margin-bottom: 0px;" />
@@ -1249,26 +1248,6 @@ if ( is_admin() ) {
 					)
 				)
 			);
-		}
-
-		// Handel uninstall hool
-		public function handle_uninstall_hook() {
-			delete_option( 'wpss_settings_options' );
-			delete_option( 'wpss_db_advanced_info' );
-			unregister_setting( 'wp_server_stats', 'wpss_settings_options' );
-			delete_transient( 'wpss_server_location' );
-			delete_transient( 'wpss_cpu_count' );
-			delete_transient( 'wpss_cpu_core_count' );
-			delete_transient( 'wpss_server_os' );
-			delete_transient( 'wpss_db_software' );
-			delete_transient( 'wpss_db_version' );
-			delete_transient( 'wpss_db_max_connection' );
-			delete_transient( 'wpss_db_max_packet_size' );
-			delete_transient( 'wpss_db_disk_usage' );
-			delete_transient( 'wpss_db_index_disk_usage' );
-			delete_transient( 'wpss_php_max_upload_size' );
-			delete_transient( 'wpss_php_max_post_size' );
-			delete_site_transient( 'wpss-donate-notice-forever' );
 		}
 
 	} //end of class

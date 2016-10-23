@@ -135,6 +135,9 @@ Page to show up more in-depth details about your Database server
 So, in WordPress remo the plugin version number will follow like this **X.X.X**, whereas in Github the version number with follow like this **X.X.X.X** where the last **X** denotes beta phase
 
 ## Changelog
+### 1.4.5, October 23, 2016
+* Removed the uninstall hook due to some compatibility issue now the uninstallation gets handelled by the uninstall.php file only
+
 ### 1.4.3 & v1.4.4, October 14, 2016
 * Make sure if the user click on the close notice button, it stays close
 * Make sure on deletion of the plugin, the notice transient gets deleted

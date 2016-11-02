@@ -16,7 +16,7 @@ Monitor your WordPress site the right way with most important server stats like 
 
 **Tested up to:** 4.6.1
 
-**Stable Tag:** 1.4.4
+**Stable Tag:** 1.4.6
 
 **License:** MIT
 
@@ -135,6 +135,9 @@ Page to show up more in-depth details about your Database server
 So, in WordPress remo the plugin version number will follow like this **X.X.X**, whereas in Github the version number with follow like this **X.X.X.X** where the last **X** denotes beta phase
 
 ## Changelog
+### 1.4.6, November 2, 2016
+* Fixed a PHP warning
+
 ### 1.4.5, October 23, 2016
 * Removed the uninstall hook due to some compatibility issue now the uninstallation gets handelled by the uninstall.php file only
 

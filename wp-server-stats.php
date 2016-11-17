@@ -5,7 +5,7 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.4.6
+Version: 1.4.7
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -47,7 +47,7 @@ if ( is_admin() ) {
 			
 			var $memory = false;
 			// declaring the protected variables
-			protected $refresh_interval, $memcache_host, $memcache_port, $bg_color_good, $bg_color_average, $bg_color_bad, $footer_text_color;
+			protected $refresh_interval, $memcache_host, $memcache_port, $use_ipapi_pro, $ipapi_pro_key, $bg_color_good, $bg_color_average, $bg_color_bad, $footer_text_color;
 
 			public function __construct() {
 	            add_action( 'init', array (&$this, 'check_limit') );
@@ -129,6 +129,8 @@ if ( is_admin() ) {
 			}
 
 			public function check_server_location() {
+				$this->fetch_data();
+				$ipapi_pro_key = trim( $this->ipapi_pro_key );
 				//get the server ip
 				$ip = $this->check_server_ip();
 
@@ -137,12 +139,24 @@ if ( is_admin() ) {
 				if( $server_location === FALSE ) {
 					// lets validate the ip
 					if( $this->validate_ip_address( $ip ) ) {
-						$query = @unserialize( file_get_contents( 'http://ip-api.com/php/'.$ip ) );
+						if( $this->use_ipapi_pro == 'Yes' && !empty( $ipapi_pro_key ) ) { // Use the pro version of IP-API query
+							$query = @unserialize( file_get_contents( 'https://pro.ip-api.com/php/' . $ip . '?key=' . $ipapi_pro_key ) );
+						} else { // Use the free version of IP-API
+							$query = @unserialize( file_get_contents( 'http://ip-api.com/php/'.$ip ) );
+						}
 						if( $query && $query['status'] == 'success' ) {
 							$server_location = $query['city'] . ', ' . $query['country'];
 							set_transient( 'wpss_server_location', $server_location, WEEK_IN_SECONDS );
 						} else {
-							$server_location = $query['message'];
+							if( empty( $query['message'] ) ) {
+								if( $this->use_ipapi_pro == 'Yes' ) {
+									$server_location = 'You\'ve provided a wrong IP-API Pro Key';
+								} else {
+									$server_location = $query['status'];
+								}
+							} else {
+								$server_location = $query['message'];
+							}
 						}
 					} else {
 						$server_location = "ERROR IP096T";
@@ -968,6 +982,8 @@ if ( is_admin() ) {
 						            settings_fields('wp_server_stats');      
 						            do_settings_sections('wp_server_stats');
 						            submit_button();
+
+						            //print_r( get_option( 'wpss_settings_options') );
 						        ?>
 							</form>
 						</div>
@@ -980,11 +996,11 @@ if ( is_admin() ) {
 							<ul class="user-info">
 								<li>
 									<strong class="highlight"><?php _e('Refresh Interval', 'wp-server-stats'); ?></strong>
-									<?php _e('This denotes the interval time after which the shell commands will execute again to give you the current load details. By default it is set to 200ms, but if you are seeing CPU load increase after instealling this plugin, try to increase the interval time to 1000ms, 2000ms, 3000ms or more until you see a normal CPU load. Generally it is not recommended to change the value unless you are having extremely high CPU load due to this plugin.', 'wp-server-stats', 'wp-server-stats'); ?>
+									<?php _e('This denotes the interval time after which the shell commands will execute again to give you the current load details. By default it is set to 200ms, but if you are seeing CPU load increase after instealling this plugin, try to increase the interval time to 1000ms, 2000ms, 3000ms or more until you see a normal CPU load. Generally it is not recommended to change the value unless you are having extremely high CPU load due to this plugin.', 'wp-server-stats' ); ?>
 								</li>
 								<li>
 									<strong class="highlight"><?php _e('Status Bar & Footer Text Color', 'wp-server-stats'); ?></strong>
-									<?php _e('In case you do not like the color scheme I have used on this plugin, you can easily change those colors.', 'wp-server-stats', 'wp-server-stats'); ?>
+									<?php _e('In case you do not like the color scheme I have used on this plugin, you can easily change those colors.', 'wp-server-stats' ); ?>
 								</li>
 								<li>
 									<strong class="highlight"><?php _e('Memcached Server Host & Port', 'wp-server-stats'); ?></strong>
@@ -1030,6 +1046,10 @@ if ( is_admin() ) {
 			    // Files for Memcache Server Details
 			    add_settings_field( 'wpss_memcache_host_field', __( 'Memcached Server Host (Only if you have Memcached installed in your server)', 'wp-server-stats' ), array( $this, 'memcache_host_field' ), 'wp_server_stats', 'wpss_section' ); // id, title, display cb, page, section
 			    add_settings_field( 'wpss_memcache_port_field', __( 'Memcached Server Port (Only if you have Memcached installed in your server)', 'wp-server-stats' ), array( $this, 'memcache_port_field' ), 'wp_server_stats', 'wpss_section' ); // id, title, display cb, page, section
+
+			    // Fields for ip-api.com pro support section
+			    add_settings_field( 'wpss_use_ipapi_pro', __( 'Do you want to use the IP-API Pro key?', 'wp-server-stats' ), array( $this, 'use_ipapi_pro' ), 'wp_server_stats', 'wpss_section' ); // id, title, display cb, page, section
+			    add_settings_field( 'wpss_ipapi_pro_key', __( 'Provide your IP-API Pro key', 'wp-server-stats' ), array( $this, 'ipapi_pro_key' ), 'wp_server_stats', 'wpss_section' ); // id, title, display cb, page, section
 			     
 			    // Add Background Color Field
 			    add_settings_field( 'wpss_bg_field_good', __( 'Realtime Status Bar Background Color - For Good Status', 'wp-server-stats' ), array( $this, 'bg_settings_field_good' ), 'wp_server_stats', 'wpss_section' ); // id, title, display cb, page, section
@@ -1062,6 +1082,37 @@ if ( is_admin() ) {
 
 			public function memcache_port_field() {
 				echo '<input type="number" name="wpss_settings_options[memcache_port]" value="' . $this->memcache_port  . '" />';
+			}
+
+			public function use_ipapi_pro() {
+				$this->fetch_data();
+				$options = get_option( 'wpss_settings_options' );
+				?>
+				<input type="radio" name="wpss_settings_options[use_ipapi_pro]" value="Yes" <?php checked( empty( $options['use_ipapi_pro'] ) ? $this->use_ipapi_pro : $options['use_ipapi_pro'], 'Yes' ) ?> /> 
+				<span><?php _e( 'Yes', 'wp-server-stats' ); ?></span>
+				
+				<input type="radio" name="wpss_settings_options[use_ipapi_pro]" value="No" <?php checked( empty( $options['use_ipapi_pro'] ) ? $this->use_ipapi_pro : $options['use_ipapi_pro'], 'No' ) ?> /> 
+				<span><?php _e( 'No', 'wp-server-stats' ); ?></span>
+				<br />
+				<p><?php printf( __( 'By default this plugin uses the free API from %1$sIP-API.com%2$s which allows %3$s150 requests/min%4$s. But for high traffic websites, this might be very small and may generate %3$s503 Error%4$s if you try to do more than %3$s150 req/min%4$s. To resolve this problem, you can use the %5$sPaid Version of IP-API%6$s and provide your paid key below which will allow you to do %7$sUnlimited%8$s nuber of requests.', 'wp-server-stats'),
+					'<a href="http://ip-api.com/" target="_blank" rel="external nofollow">', '</a>',
+					'<code>', '</code>',
+					'<strong><a href="https://signup.ip-api.com/" target="_blank" rel="external nofollow">', '</a></strong>',
+					'<strong>', '</strong>' ); ?>
+				</p>
+				<?php
+			}
+
+			public function ipapi_pro_key() {
+				$this->fetch_data();
+				?>
+				<input type="text" name="wpss_settings_options[ipapi_pro_key]" value="<?php echo $this->ipapi_pro_key; ?>" placeholder="AbcDEFGhiJ0KL1m">
+				<p><?php printf( __( 'Please provide your paid API key of ip-api.com which you have %1$sreceived over email%2$s after %3$spurchasing the paid IP-API subscription%4$s. %5$sCheck this screenshot%6$s to understand what key I\'m talking about.', 'wp-server-stats'),
+					'<strong>', '</strong>',
+					'<a href="https://signup.ip-api.com/" target="_blank" rel="external nofollow">', '</a>',
+					'<strong><a href="https://i.imgur.com/gp2mXiH.jpg" target="_blank" rel="external nofollow">', '</a></strong>' );?>
+				</p>
+				<?php
 			}
 			 
 			public function bg_settings_field_good() { 
@@ -1096,6 +1147,10 @@ if ( is_admin() ) {
 
 			    $memcache_port = trim( $fields['memcache_port'] );
 			    $valid_fields['memcache_port'] = strip_tags( stripslashes( $memcache_port ) );
+
+			    $valid_fields['use_ipapi_pro'] = strip_tags( stripslashes( trim( $fields['use_ipapi_pro'] ) ) );
+
+			    $valid_fields['ipapi_pro_key'] = strip_tags( stripslashes( trim( $fields['ipapi_pro_key'] ) ) );
 			     
 			    // Validate color section
 			    foreach ( $fields as $key => $value ) {
@@ -1192,6 +1247,20 @@ if ( is_admin() ) {
 						$this->memcache_port = 11211; // default memcache port 11211
 					}
 
+					// fetching if using ip-api
+					if( !empty( $fetched_data['use_ipapi_pro'] ) ) {
+						$this->use_ipapi_pro = $fetched_data['use_ipapi_pro'];
+					} else {
+						$this->use_ipapi_pro = 'No';
+					}
+
+					// fetching the ip-api key
+					if( !empty( $fetched_data['ipapi_pro_key'] ) ) {
+						$this->ipapi_pro_key = $fetched_data['ipapi_pro_key'];
+					} else {
+						$this->ipapi_pro_key = '';
+					}
+
 					// fetching the bg_color_good
 					if( !empty( $fetched_data['bg_color_good'] ) ) {
 						$this->bg_color_good = $fetched_data['bg_color_good'];
@@ -1227,6 +1296,8 @@ if ( is_admin() ) {
 					$this->footer_text_color = "#8e44ad";
 					$this->memcache_host = 'localhost';
 					$this->memcache_port = 11211;
+					$this->use_ipapi_pro = 'No';
+					$this->ipapi_pro_key = '';
 				}
 			}
 

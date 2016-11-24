@@ -1,4 +1,4 @@
-# WP Server Stats
+# WP Server Stats [![Version](https://img.shields.io/wordpress/plugin/v/wp-server-stats.svg?style=flat-square)](https://wordpress.org/plugins/disable-blogging/) ![Downloads](https://img.shields.io/wordpress/plugin/dt/wp-server-stats.svg?style=flat-square) ![Rating](https://img.shields.io/wordpress/plugin/r/wp-server-stats.svg?style=flat-square)
 
 ![WP Server Stats Banner](https://i.imgur.com/JSonC5R.png)
 

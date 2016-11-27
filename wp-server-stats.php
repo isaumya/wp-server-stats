@@ -5,7 +5,7 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.4.7
+Version: 1.4.8
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -1012,19 +1012,9 @@ if ( is_admin() ) {
 							<hr />
 							<h2><?php _e('Support the plugin', 'wp-server-stats'); ?></h2>
 							<p><?php _e('Believe it or not, developing a WorPress plugin really takes quite a lot of time to develop, test and to do continuous bugfix. Moreover as I\'m sharing this plugin for free, so all those times I\'ve spent coding this plugin yeild no revenue. So, overtime it become really hard to keep spending time on this plugin. So, if you like this plugin, I will really appriciate if you consider donating some amount for this plugin. Which will help me keep spending time on this plugin and make it even better. Please donate, if you can.', 'wp-server-stats'); ?></p>
-							<div class="content-center">
-								<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-							        <input type="hidden" name="cmd" value="_donations">
-							        <input type="hidden" name="business" value="saumya0305@gmail.com">
-							        <input type="hidden" name="lc" value="US">
-							        <input type="hidden" name="item_name" value="Plugin Donation - WP Server Stats">
-							        <input type="hidden" name="no_note" value="0">
-							        <input type="hidden" name="currency_code" value="USD">
-							        <input type="hidden" name="bn" value="PP-DonationsBF:btn_donateCC_LG.gif:NonHostedGuest">
-							        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-							        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-						        </form>
-					        </div>
+							<a href="http://donate.isaumya.com/" class="content-center" target="_blank">
+								<img src ="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" />
+							</a>
 						</div>
 					</div>
 				<?php
@@ -1210,7 +1200,7 @@ if ( is_admin() ) {
 								__('%1$sThank you%2$s for installing %1$sWP Server Stats%2$s. It took countless hours to code, design, test and include many useful server info that you like so much to show up in your WordPress dashboard. But as this is a <strong>free plugin</strong>, all of these time and effort does not generate any revenue. Also as I\'m not a very privileged person, so earning revenue matters to me for keeping my lights on and keep me motivated to do the work I love. %3$s So, if you enjoy this plugin and understand the huge effort I put into this, please consider %1$s%4$sdonating some amount%5$s (no matter how small)%2$s for keeping aliave the development of this plugin. Thank you again for using my plugin. Also if you love using this plugin, I would really appiciate if you take 2 minutes out of your busy schedule to %1$s%6$sshare your review%7$s%2$s about this plugin.', 'wp-server-stats'),
 								'<strong>', '</strong>',
 								'<br /> <br />',
-								'<a href="https://goo.gl/V41y3K" target="_blank" rel="external" title="WP Server Stats - Plugin Donation">', '</a>',
+								'<a href="http://donate.isaumya.com" target="_blank" rel="external" title="WP Server Stats - Plugin Donation">', '</a>',
 								'<a href="https://wordpress.org/support/plugin/wp-server-stats/reviews/" target="_blank" rel="external" title="WP Server Stats - Post your Plugin Review">', '</a>'
 							);
 				printf( '<div data-dismissible="wpss-donate-notice-forever" class="%1$s"><p>%2$s</p></div>', $class, $message );

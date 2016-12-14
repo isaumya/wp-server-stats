@@ -5,7 +5,7 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.5.1
+Version: 1.5.2
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,9 +34,6 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 /* Define Constants */
 define('WP_SERVER_STATS_BASE', plugin_basename(__FILE__));
 
-/* Requiring the necessary files */
-require_once plugin_dir_path( __FILE__ ) . 'vendor/wp-admin-notification/bootstrap.php';
-
 session_start();
 
 if ( is_admin() ) {	
@@ -64,8 +61,9 @@ if ( is_admin() ) {
 				add_action( 'admin_menu', array( $this, 'create_admin_menu' ) );
 				// Register page options
 	    		add_action( 'admin_init', array( $this, 'register_page_options' ) );
-	    		// show welcome notice
-	    		add_action( 'admin_init', array( $this, 'welcome_notice' ) );
+	    		// Welcome Donate Notice
+	    		add_action( 'wp_ajax_handle_wpss_donate_notice', array( $this, 'handle_wpss_donate_notice' ) );
+				add_action( 'wp_ajax_nopriv_handle_wpss_donate_notice', array( $this, 'handle_wpss_donate_notice' ) );
 	    		// Admin notice
 	    		add_action( 'admin_notices', array( $this, 'show_admin_notice' ) );
 
@@ -317,10 +315,10 @@ if ( is_admin() ) {
 
 				if( $db_disk_usage === FALSE ) {
 					global $wpdb;
-			        $db_disk_usage = '';
-			        $tablesstatus = $wpdb->get_results("SHOW TABLE STATUS", ARRAY_A);
+			        $db_disk_usage = 0;
+			        $tablesstatus = $wpdb->get_results("SHOW TABLE STATUS");
 			        foreach($tablesstatus as  $tablestatus) {
-			            $db_disk_usage += absint( $tablestatus->Data_length );
+			            $db_disk_usage += $tablestatus->Data_length;
 			        }
 			        if ( empty( $db_disk_usage ) ) {
 			            $db_disk_usage = __('N/A', 'wp-server-stats');
@@ -339,10 +337,10 @@ if ( is_admin() ) {
 
 		    	if( $db_index_disk_usage === FALSE ) {
 		    		global $wpdb;
-			        $db_index_disk_usage = '';
-			        $tablesstatus = $wpdb->get_results("SHOW TABLE STATUS", ARRAY_A);
+			        $db_index_disk_usage = 0;
+			        $tablesstatus = $wpdb->get_results("SHOW TABLE STATUS");
 			        foreach( $tablesstatus as  $tablestatus ) {
-			            $db_index_disk_usage +=  absint( $tablestatus->Index_length );
+			            $db_index_disk_usage +=  $tablestatus->Index_length;
 			        }
 			        if ( empty( $db_index_disk_usage ) ) {
 			            $db_index_disk_usage = __('N/A', 'wp-server-stats');
@@ -748,13 +746,13 @@ if ( is_admin() ) {
 						</tfoot>
 						<tbody>
 						<?php
-							if( get_option( 'wpss_db_advanced_info' ) ) {
-								$dbinfo = get_option( 'wpss_db_advanced_info' );
+							if( get_option('wpss_db_advanced_info') ) {
+								$dbinfo = get_option('wpss_db_advanced_info');
 							} else {
 								global $wpdb;
 							    $dbversion = $wpdb->get_var("SELECT VERSION() AS version");
 							    $dbinfo = $wpdb->get_results("SHOW VARIABLES");
-							    update_option( 'wpss_db_advanced_info', $dbinfo );
+							    update_option('wpss_db_advanced_info', $dbinfo);
 							}
 							
 						    if( !empty( $dbinfo ) ) {
@@ -1190,26 +1188,43 @@ if ( is_admin() ) {
 
 			public function show_admin_notice() {
 				settings_errors( 'wpss_settings_options' );
-			}
 
-			/* Function to show the welcome notice */
-			public function welcome_notice() {
-				$notice_text = sprintf( 
-					__('%1$sThank you%2$s for installing %1$sWP Server Stats%2$s. It took more than 70 hours to code, design, test and include many useful server info that you like so much to show up in your WordPress dashboard. But as this is a <strong>free plugin</strong>, all of these time and effort does not generate any revenue. Also as I\'m not a very privileged person, so earning revenue matters to me for keeping my lights on and keep me motivated to do the work I love. %3$s So, if you enjoy this plugin and understand the huge effort I put into this, please consider %1$s%4$sdonating some amount%5$s (no matter how small)%2$s for keeping aliave the development of this plugin. Thank you again for using my plugin. Also if you love using this plugin, I would really appiciate if you take 2 minutes out of your busy schedule to %1$s%6$sshare your review%7$s%2$s about this plugin.', 'wp-server-stats'),
+				$class = 'notice notice-success is-dismissible wpss_donate_notice';
+		    	$message = sprintf( 
+					__('%1$sThank you%2$s for installing %1$sWP Server Stats%2$s. It took 70+ hours to code, design, test and include many useful server info that you like so much to show up in your WordPress dashboard. But as this is a <strong>free plugin</strong>, all of these time and effort does not generate any revenue. Also as I\'m not a very privileged person, so earning revenue matters to me for keeping my lights on and keep me motivated to do the work I love. %3$s So, if you enjoy this plugin and understand the huge effort I put into this, please consider %1$s%4$sdonating some amount%5$s (no matter how small)%2$s for keeping aliave the development of this plugin. Thank you again for using my plugin. Also if you love using this plugin, I would really appiciate if you take 2 minutes out of your busy schedule to %1$s%6$sshare your review%7$s%2$s about this plugin.', 'wp-server-stats'),
 					'<strong>', '</strong>',
 					'<br /> <br />',
 					'<a href="http://donate.isaumya.com" target="_blank" rel="external" title="WP Server Stats - Plugin Donation">', '</a>',
 					'<a href="https://wordpress.org/support/plugin/wp-server-stats/reviews/" target="_blank" rel="external" title="WP Server Stats - Post your Plugin Review">', '</a>'
 				);
+		    	$welcome_notice_curr_state = get_option( 'wpss_donate_notice' );
+		    	if( empty( $welcome_notice_curr_state ) ) {
+		    		printf( '<div id="wpss_donate_notice" class="%1$s"><p>%2$s</p></div>', $class, $message );
+		    		echo "<script>
+		    		(function($){
+						$('#wpss_donate_notice').on('click', '.notice-dismiss', function(){
+							jQuery.ajax({
+								type: 'POST',
+								url: '" . admin_url( 'admin-ajax.php' ) . "',
+								data: {
+									\"action\": \"handle_wpss_donate_notice\",
+									\"nonce\": \"" . wp_create_nonce( "wpss_wn_nonce" ) . "\"
+								},
+								success: function( data ){
+									$('#wpss_donate_notice').hide();
+								}
+							});
+						});
+					})(jQuery);
+		    		</script>";
+		    	}
+			}
 
-				wp_admin_notification( 
-				    'wpss_donate_notice', 
-				    $notice_text, 
-				    'success', 
-				    true,
-				    'donate_notice',
-				    true
-				);
+			public function handle_wpss_donate_notice() {
+				check_ajax_referer( 'wpss_wn_nonce', 'nonce' );
+		    	update_option('wpss_donate_notice', 'hide' );
+				$result = get_option( 'wpss_donate_notice' );
+				return $result;
 			}
 
 			/**

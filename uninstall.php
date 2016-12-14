@@ -7,12 +7,12 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 // Let's delete the Options
 delete_option( 'wpss_settings_options' );
 delete_option( 'wpss_db_advanced_info' );
-delete_option( 'wp_dn_wpss_donate_notice' );
+delete_option( 'wpss_donate_notice' );
 
 // Delete option for multisite
 delete_site_option( 'wpss_settings_options' );
 delete_site_option( 'wpss_db_advanced_info' );
-delete_site_option( 'wp_dn_wpss_donate_notice' );
+delete_site_option( 'wpss_donate_notice' );
 
 // Unregister settings
 unregister_setting( 'wp_server_stats', 'wpss_settings_options' );

@@ -12,6 +12,8 @@ if(!class_exists('WP_Admin_Notifications'))
         private $notifications = array();
         
         private $dismissed_notices;
+
+        private $handle;
         
         /**
          * Returns the *Singleton* instance of this class.
@@ -27,10 +29,10 @@ if(!class_exists('WP_Admin_Notifications'))
             return static::$instance;
         }
         
-        public function register_notification( $handle, $options )
-        {
-            if( 0 === count( $this->notifications ) )
-            {
+        public function register_notification( $handle, $options ) {
+        	$this->handle = $handle;
+
+            if( 0 === count( $this->notifications ) ) {
                 $this->init();
             }
             
@@ -63,7 +65,7 @@ if(!class_exists('WP_Admin_Notifications'))
             if( !in_array( $id, $this->dismissed_notices ) )
             {
                 $this->dismissed_notices[] = $id;
-                update_option( 'wp_dismissed_notices', $this->dismissed_notices);
+                update_option( 'wp_dn_' . $this->handle, $this->dismissed_notices);
             }
             die();
         }
@@ -90,7 +92,7 @@ if(!class_exists('WP_Admin_Notifications'))
             add_action( 'network_admin_notices', array( $this, 'render_network_notifications' ) );
             add_action( 'wp_ajax_dismiss_admin_notification', array( $this, 'dismiss_notification' ) );
             add_action( 'admin_head', array( $this, 'render_script' ) );
-            $this->dismissed_notices = get_option('wp_dismissed_notices');
+            $this->dismissed_notices = get_option('wp_dn_' . $this->handle);
             if( false === $this->dismissed_notices ) $this->dismissed_notices = array();
             //var_dump($this->dismissed_notices);
         }

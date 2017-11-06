@@ -31,6 +31,7 @@ delete_transient( 'wpss_db_index_disk_usage' );
 delete_transient( 'wpss_php_max_upload_size' );
 delete_transient( 'wpss_php_max_post_size' );
 delete_transient( 'wpss-donate-notice' );
+delete_transient( 'wpss_total_ram' );
 
 // Delete option for multisite
 delete_site_transient( 'wpss_server_location' );

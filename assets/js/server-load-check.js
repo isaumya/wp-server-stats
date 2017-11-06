@@ -66,6 +66,39 @@
 						"width": memory_usage_pos + '%',
 						"background-color": mem_background_color
 					});
+
+					/*Fetching RAM Usage*/
+					$('#realtime_ram_usage').html( response.free_ram );
+					$('#ram_usage_footer').html( response.free_ram );
+
+					/*Fetching RAM load in percentage*/
+					var ram_usage_pos = response.ram_usage_pos;
+					$('#ram-usage').html( ram_usage_pos + "%");
+					$('#ram-usage-pos-footer').html( ram_usage_pos + "%");
+					
+					if( ram_usage_pos < 10 ) {
+						$('#ram-usage').css({
+							"margin-left": "30px",
+							"color": "#444"
+						});
+					} else {
+						$('#ram-usage').css({
+							"margin-left": "auto",
+							"color": "#fff"
+						});
+					}
+					if( ram_usage_pos > 80 ) {
+						var ram_background_color = response.bg_color_average;
+					} else if ( ram_usage_pos > 95 ) {
+						var ram_background_color = response.bg_color_bad;
+					} else {
+						var ram_background_color = response.bg_color_good;
+					}
+					$('#ram-usage-upper-div').css({
+						"width": ram_usage_pos + '%',
+						"background-color": ram_background_color
+					});
+
 				setTimeout( do_ajax, response.refresh_interval ); //After completion of request, time to redo it after a second
 				if( flag == false) {
 					showUptime( response.uptime );

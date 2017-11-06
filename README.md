@@ -10,13 +10,11 @@ Monitor your WordPress site the right way with most important server stats like 
 
 **Plugin URI:** https://www.isaumya.com/portfolio-item/wp-server-stats/
 
-**Donate link:** http://donate.isaumya.com/
+**Donate link:** https://donate.isaumya.com/
 
-**Requires at least:** 4.1
+**Requires at least:** 4.2
 
-**Tested up to:** 4.6.1
-
-**Stable Tag:** 1.4.7
+**Tested up to:** 4.9
 
 **License:** MIT
 
@@ -41,6 +39,8 @@ Features of the plugin include:
 * If memcached is enabled it will show you a detailed information about your memcached installation, if provided right memcache host and port details in the **WP Server Stats** > **General Settings** page
 * Shows total number of allowed CPU for yoru site
 * Shows Realtime CPU usage percentage
+* Shows Total RAM allocated
+* Shows Real Time RAM Usage percentage
 * Shows the database software installed on your site e.g. MySQL, MariaDB, Oracle etc.
 * Shows the database version number
 * Shows maximum number of connections allowed to your database
@@ -57,9 +57,9 @@ Features of the plugin include:
 * Shows allowed PHP memory for your WordPress site
 * Realtime Amount & Percentage of your PHP memory usage
 * A seperate page to show up even more details about your install PHP & it's various modules
-* Realtime Memory & CPU info bar changes color based on the load (you can change the colors from the WP Server Stats General Settings Page)
+* Realtime PHP Memory, RAM Usage & CPU info bar changes color based on the load (you can change the colors from the WP Server Stats General Settings Page)
 * Designed with flat colors (you can change the color scheme if you want)
-* Realtime Memory & CPU usage info at the admin footer so that no matter what admin page you are, you can always see it
+* Realtime PHP Memory, RAM Usage & CPU usage info at the admin footer so that no matter what admin page you are, you can always see it
 * Uses advanced WordPress Trainsient Caching mechanism to run the plugin super smooth without eating a lot of server resource. All the cache data will be auto expired on each week and then the plugin will re-cache the updated data again, to **ensure the least possible resource consumption by the plugin**
 * Only shows to the Administrators. For Multisite, it will show the details to each site administrators, but not the network admins
 * Option to change the realtime script refresh interval (default: 200ms), color scheme, memcache host and port details from the WP Server Stats - General Settings Page

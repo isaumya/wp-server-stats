@@ -5,7 +5,7 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.5.6
+Version: 1.5.8
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,20 +34,6 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 /* Define Constants */
 define('WP_SERVER_STATS_BASE', plugin_basename(__FILE__));
 
-// Check if I am using less than PHP v5.4.0
-if ( version_compare( PHP_VERSION, '5.4.0', '<' ) ) {
-	// Check if session has already been started. If not, start it
-	if( session_id() == '' ) {
-    	session_start();
-	}
-} else {
-	// This means that I'm at >= PHP v5.4.0
-	if ( session_status() == PHP_SESSION_NONE ) {
-    	session_start();
-	}
-
-}
-
 if ( is_admin() ) {	
 	
 	if ( !class_exists("wp_server_stats") ) {
@@ -56,7 +42,7 @@ if ( is_admin() ) {
 			
 			var $memory = false;
 			// declaring the protected variables
-			protected $refresh_interval, $memcache_host, $memcache_port, $use_ipapi_pro, $ipapi_pro_key, $bg_color_good, $bg_color_average, $bg_color_bad, $footer_text_color;
+			protected $refresh_interval, $memcache_host, $memcache_port, $use_ipapi_pro, $ipapi_pro_key, $bg_color_good, $bg_color_average, $bg_color_bad, $footer_text_color, $server_load_nonce;
 
 			public function __construct() {
 	            add_action( 'init', array (&$this, 'check_limit') );
@@ -80,6 +66,8 @@ if ( is_admin() ) {
 	    		add_action( 'admin_notices', array( $this, 'show_admin_notice' ) );
 
 				$this->memory = array();
+				//Create the nonce to be used by process_ajax()
+				$this->server_load_nonce = wp_create_nonce( 'wpss_slc_nonce' );
 			}
 	        
 	        public function check_limit() {
@@ -477,12 +465,10 @@ if ( is_admin() ) {
 	    		wp_enqueue_style( 'wp-color-picker' );
 
 	    		/* JS Calls */
-			    $server_load_nonce = wp_create_nonce( 'slc_nonce' );
-			    $_SESSION['server_load_check_nonce'] = $server_load_nonce;
 				wp_register_script('server-load-check-ajax', plugin_dir_url( __FILE__ ) . 'assets/js/server-load-check.min.js', array( 'jquery', 'wp-color-picker' ), '2.0.0', true);
 				wp_enqueue_script('server-load-check-ajax');
 				wp_localize_script( 'server-load-check-ajax', 'server_load_check_vars', array(
-						'server_load_check_nonce' => $server_load_nonce
+						'server_load_check_nonce' => $this->server_load_nonce
 					)
 				);
 				wp_register_script('flipclock', plugin_dir_url( __FILE__ ) . 'assets/js/flipclock.min.js', array( 'jquery' ), '0.7.3', true);
@@ -490,7 +476,7 @@ if ( is_admin() ) {
 			}
 
 			public function process_ajax() {
-				if( !isset( $_SESSION['server_load_check_nonce'] ) || !wp_verify_nonce( $_SESSION['server_load_check_nonce'], 'slc_nonce' ) )
+				if( !isset( $this->server_load_nonce ) || !wp_verify_nonce( $this->server_load_nonce, 'wpss_slc_nonce' ) )
 					die( 'Permission Check Failed' );
 
 				/* Let's call the fetch data function */

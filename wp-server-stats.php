@@ -12,7 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 /*
-Copyright 2012-2018 by Saumya Majumder 
+Copyright 2012-2018 by Saumya Majumder
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,12 +34,12 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 /* Define Constants */
 define('WP_SERVER_STATS_BASE', plugin_basename(__FILE__));
 
-if ( is_admin() ) {	
-	
+if ( is_admin() ) {
+
 	if ( !class_exists("wp_server_stats") ) {
 
 		class wp_server_stats {
-			
+
 			var $memory = false;
 			// declaring the protected variables
 			protected $refresh_interval, $memcache_host, $memcache_port, $use_ipapi_pro, $ipapi_pro_key, $bg_color_good, $bg_color_average, $bg_color_bad, $footer_text_color, $server_load_nonce;
@@ -69,7 +69,7 @@ if ( is_admin() ) {
 				//Create the nonce to be used by process_ajax()
 				$this->server_load_nonce = wp_create_nonce( 'wpss_slc_nonce' );
 			}
-	        
+
 	        public function check_limit() {
 	            $memory_limit = ini_get('memory_limit');
 				if (preg_match('/^(\d+)(.)$/', $memory_limit, $matches)) {
@@ -138,7 +138,7 @@ if ( is_admin() ) {
 	        public function check_memory_limit_cal() {
 	        	return (int) ini_get('memory_limit');
 	        }
-			
+
 			public function check_server_ip() {
 				return trim( gethostbyname( gethostname() ) );
 			}
@@ -177,7 +177,7 @@ if ( is_admin() ) {
 						$server_location = "ERROR IP096T";
 					}
 				}
-				
+
 				return $server_location;
 			}
 
@@ -233,7 +233,7 @@ if ( is_admin() ) {
 						$cpu_core_count = 'ERROR EXEC096T';
 					}
 				}
-				
+
 				return $cpu_core_count;
 			}
 
@@ -263,7 +263,7 @@ if ( is_admin() ) {
 			}
 
 			public function server_os() {
-				
+
 				$server_os = get_transient( 'wpss_server_os' );
 
 				if( $server_os === FALSE ) {
@@ -292,7 +292,7 @@ if ( is_admin() ) {
 			        	$db_software = __('N/A', 'wp-server-stats');
 			        }
 				}
-				
+
 		        return $db_software;
 			}
 
@@ -303,14 +303,14 @@ if ( is_admin() ) {
 				if( $db_version === FALSE ) {
 					global $wpdb;
 		        	$db_version_dump = $wpdb->get_var("SELECT VERSION() AS version from DUAL");
-		        	if ( preg_match( '/\d+(?:\.\d+)+/', $db_version_dump, $matches ) ) { 
-					    $db_version = $matches[0]; //returning the first match 
+		        	if ( preg_match( '/\d+(?:\.\d+)+/', $db_version_dump, $matches ) ) {
+					    $db_version = $matches[0]; //returning the first match
 					    set_transient( 'wpss_db_version', $db_version, WEEK_IN_SECONDS );
 					} else {
 						$db_version = __('N/A', 'wp-server-stats');
 					}
 				}
-				
+
 				return $db_version;
 			}
 
@@ -348,7 +348,7 @@ if ( is_admin() ) {
 			        	set_transient( 'wpss_db_max_packet_size', $db_max_packet_size, WEEK_IN_SECONDS );
 			        }
 				}
-				
+
 		        return $db_max_packet_size;
 			}
 
@@ -370,7 +370,7 @@ if ( is_admin() ) {
 			        	set_transient( 'wpss_db_disk_usage', $db_disk_usage, WEEK_IN_SECONDS );
 			        }
 				}
-		        
+
 		        return $db_disk_usage;
 		    }
 
@@ -392,12 +392,12 @@ if ( is_admin() ) {
 			        	set_transient( 'wpss_db_index_disk_usage', $db_index_disk_usage, WEEK_IN_SECONDS );
 			        }
 		    	}
-		    	
+
 		        return $db_index_disk_usage;
 		    }
 
 		    public function php_max_upload_size() {
-		    	
+
 		    	$php_max_upload_size = get_transient( 'wpss_php_max_upload_size' );
 
 		    	if( $php_max_upload_size === FALSE ) {
@@ -409,7 +409,7 @@ if ( is_admin() ) {
 			            $php_max_upload_size = __('N/A', 'wp-server-stats');
 		        	}
 		    	}
-		        
+
 		        return $php_max_upload_size;
 		    }
 
@@ -426,7 +426,7 @@ if ( is_admin() ) {
 			            $php_max_post_size = __('N/A', 'wp-server-stats');
 			        }
 		    	}
-		        
+
 		        return $php_max_post_size;
 		    }
 
@@ -482,20 +482,20 @@ if ( is_admin() ) {
 				/* Let's call the fetch data function */
 				$this->fetch_data();
 
-				/* If Shell is enablelled then execute the CPU Load, Memory Load, RAM Load and Uptime */
+				/* If Shell is enabled then execute the CPU Load, Memory Load, RAM Load and Uptime */
 				if( $this->isShellEnabled() ) {
 					$cpu_load = trim( shell_exec("echo $((`ps aux|awk 'NR > 0 { s +=$3 }; END {print s}'| cut -d . -f 1` / `cat /proc/cpuinfo | grep cores | grep -o '[0-9]' | wc -l`))") );
 					$memory_usage_MB = function_exists('memory_get_usage') ? round(memory_get_usage() / 1024 / 1024, 2) : 0;
 					$memory_usage_pos = round ( ( ( $memory_usage_MB / (int) $this->check_memory_limit_cal() ) * 100 ), 0);
 					$total_ram_server = ( is_numeric( $this->check_total_ram() ) ? $this->check_total_ram() : 0 );
 					$free_ram_server = ( is_numeric( $this->check_free_ram() ) ? $this->format_filesize_kB( $this->check_free_ram() ) : "0 KB" );
-					$ram_usage_pos = round( 
-						( 
-							( 
-								( is_numeric( $this->check_free_ram() ) ? $this->check_free_ram() : 0 ) 
-								/ $total_ram_server 
-							) * 100 
-						), 0 
+					$ram_usage_pos = round(
+						(
+							(
+								( is_numeric( $this->check_free_ram() ) ? $this->check_free_ram() : 0 )
+								/ $total_ram_server
+							) * 100
+						), 0
 					);
 					$uptime = trim( shell_exec("cut -d. -f1 /proc/uptime") );
 					$json_out = array (
@@ -530,14 +530,14 @@ if ( is_admin() ) {
 				}
 				die();
 			}
-			
+
 			public function dashboard_output() {
 				if ( current_user_can( 'manage_options' ) ) :
 					?>
 						<ul>
 							<li><strong><?php _e('Server OS', 'wp-server-stats'); ?></strong> : <span><?php echo $this->server_os(); ?>&nbsp;/&nbsp;<?php echo (PHP_INT_SIZE * 8) . __('Bit OS', 'wp-server-stats'); ?></span></li>
 							<li><strong><?php _e('Server Software', 'wp-server-stats'); ?></strong> : <span><?php echo $_SERVER['SERVER_SOFTWARE']; ?></span></li>
-							<li><strong><?php _e('Server IP', 'wp-server-stats'); ?></strong> : <span><?php echo ( $this->validate_ip_address( $this->check_server_ip() ) ? $this->check_server_ip() : "ERROR IP096T" ); ?></span></li>	
+							<li><strong><?php _e('Server IP', 'wp-server-stats'); ?></strong> : <span><?php echo ( $this->validate_ip_address( $this->check_server_ip() ) ? $this->check_server_ip() : "ERROR IP096T" ); ?></span></li>
 							<li><strong><?php _e('Server Port', 'wp-server-stats'); ?></strong> : <span><?php echo $_SERVER['SERVER_PORT']; ?></span></li>
 							<li><strong><?php _e('Server Location', 'wp-server-stats'); ?></strong> : <span><?php echo $this->check_server_location(); ?></span></li>
 							<li><strong><?php _e('Server Hostname', 'wp-server-stats'); ?></strong> : <span><?php echo gethostname(); ?></span></li>
@@ -614,18 +614,18 @@ if ( is_admin() ) {
 				<?php
 						else : ?>
 							<hr style="margin-top: 15px; margin-bottom: 15px;" />
-							<p style="text-align: justify;"><strong><?php _e( 'Special Note', 'wp-server-stats'); ?>:</strong> <?php _e( 'Hi, please note that PHP 
-							<code>shell_exec()</code> function is either not enable in your hosting environment or not been given executable permission, 
-							hence you won\'t be seeing the following results above: CPU/Core count, Real Time CPU Usage, Server Uptime, RAM details, Real Time RAM Usage. To see these details, 
+							<p style="text-align: justify;"><strong><?php _e( 'Special Note', 'wp-server-stats'); ?>:</strong> <?php _e( 'Hi, please note that PHP
+							<code>shell_exec()</code> function is either not enabled in your hosting environment or has not been given executable permission,
+							hence you won\'t be seeing the following results above: CPU/Core count, Real Time CPU Usage, Server Uptime, RAM details, Real Time RAM Usage. To see these details,
 							please ask your host to enable <code>shell_exec()</code> function and give it executable permission.', 'wp-server-stats' ); ?></p>
 						<?php endif;
 				endif;
 			}
-			 
+
 			public function add_dashboard() {
 				wp_add_dashboard_widget( 'wp_memory_dashboard', 'Server Overview', array (&$this, 'dashboard_output') );
 			}
-			
+
 			public function add_footer($content) {
 				if( current_user_can( 'manage_options' ) ) :
 					/* Let's call the fetch data function */
@@ -639,12 +639,12 @@ if ( is_admin() ) {
 					}
 
 					if( $this->isShellEnabled() ) {
-						$content .= $start . '<strong style="color: ' . $this->footer_text_color . ';">'. __('PHP Memory', 'wp-server-stats') .' : <span id="mem_usage_mb_footer"></span>' 
+						$content .= $start . '<strong style="color: ' . $this->footer_text_color . ';">'. __('PHP Memory', 'wp-server-stats') .' : <span id="mem_usage_mb_footer"></span>'
 						. ' ' . __('of', 'wp-server-stats') . ' ' . $this->check_limit() . ' (<span id="memory-usage-pos-footer"></span> '
-						. __('used', 'wp-server-stats') .')</strong> | <strong style="color: ' . $this->footer_text_color . ';">'. __('RAM', 'wp-server-stats') . ' : <span id="ram_usage_footer"></span> ' . __('of', 'wp-server-stats') . ' ' . ( is_numeric( $this->check_total_ram() ) ? $this->format_filesize_kB( $this->check_total_ram() ) : $this->check_total_ram() ) . ' (<span id="ram-usage-pos-footer"></span> ' . __('used', 'wp-server-stats') . ')</strong> | <strong style="color: ' . $this->footer_text_color . ';">' . __('CPU Load', 'wp-server-stats') 
+						. __('used', 'wp-server-stats') .')</strong> | <strong style="color: ' . $this->footer_text_color . ';">'. __('RAM', 'wp-server-stats') . ' : <span id="ram_usage_footer"></span> ' . __('of', 'wp-server-stats') . ' ' . ( is_numeric( $this->check_total_ram() ) ? $this->format_filesize_kB( $this->check_total_ram() ) : $this->check_total_ram() ) . ' (<span id="ram-usage-pos-footer"></span> ' . __('used', 'wp-server-stats') . ')</strong> | <strong style="color: ' . $this->footer_text_color . ';">' . __('CPU Load', 'wp-server-stats')
 						. ': <span id="cpu_load_footer"></span></strong>';
 					} else {
-						$content .= $start . '<strong style="color: ' . $this->footer_text_color . ';">'. __('Memory', 'wp-server-stats') .' : <span id="mem_usage_mb_footer"></span>' 
+						$content .= $start . '<strong style="color: ' . $this->footer_text_color . ';">'. __('Memory', 'wp-server-stats') .' : <span id="mem_usage_mb_footer"></span>'
 						. ' ' . __('of', 'wp-server-stats') . ' ' . $this->check_limit() . ' (<span id="memory-usage-pos-footer"></span> '
 						. __('used', 'wp-server-stats') .')</strong>';
 					}
@@ -653,50 +653,50 @@ if ( is_admin() ) {
 			}
 
 			public function create_admin_menu() {
-				add_menu_page( 
-					__( 'WP Server Stats', 'wp-server-stats' ), 
-					__( 'WP Server Stats', 'wp-server-stats' ), 
-					'manage_options', 
-					'wp_server_stats', 
-					'', 
-					'dashicons-chart-area', 
+				add_menu_page(
+					__( 'WP Server Stats', 'wp-server-stats' ),
+					__( 'WP Server Stats', 'wp-server-stats' ),
+					'manage_options',
+					'wp_server_stats',
+					'',
+					'dashicons-chart-area',
 					81
 				);
 
-				add_submenu_page( 
-					'wp_server_stats', 
-					__( 'WP Server Stats - General Settings', 'wp-server-stats' ), 
-					__( 'General Settings', 'wp-server-stats' ), 
-					'manage_options', 
-					'wp_server_stats', 
+				add_submenu_page(
+					'wp_server_stats',
+					__( 'WP Server Stats - General Settings', 'wp-server-stats' ),
+					__( 'General Settings', 'wp-server-stats' ),
+					'manage_options',
+					'wp_server_stats',
 					array( $this, 'admin_page_design' )
 				);
 
-				add_submenu_page( 
-					'wp_server_stats', 
-					__( 'WP Server Stats - PHP Information', 'wp-server-stats' ), 
-					__( 'PHP Information', 'wp-server-stats' ), 
-					'manage_options', 
-					'wpss_php_info', 
+				add_submenu_page(
+					'wp_server_stats',
+					__( 'WP Server Stats - PHP Information', 'wp-server-stats' ),
+					__( 'PHP Information', 'wp-server-stats' ),
+					'manage_options',
+					'wpss_php_info',
 					array( $this, 'php_details' )
 				);
 
-				add_submenu_page( 
-					'wp_server_stats', 
-					__( 'WP Server Stats - Database Information', 'wp-server-stats' ), 
-					__( 'Database Information', 'wp-server-stats' ), 
-					'manage_options', 
-					'wpss_sql_info', 
+				add_submenu_page(
+					'wp_server_stats',
+					__( 'WP Server Stats - Database Information', 'wp-server-stats' ),
+					__( 'Database Information', 'wp-server-stats' ),
+					'manage_options',
+					'wpss_sql_info',
 					array( $this, 'sql_details' )
 				);
 
 				if( class_exists( 'Memcache' ) ) {
-					add_submenu_page( 
-						'wp_server_stats', 
-						__( 'WP Server Stats - Memcache Information', 'wp-server-stats' ), 
-						__( 'Memcache Information', 'wp-server-stats' ), 
-						'manage_options', 
-						'wpss_memcache_info', 
+					add_submenu_page(
+						'wp_server_stats',
+						__( 'WP Server Stats - Memcache Information', 'wp-server-stats' ),
+						__( 'Memcache Information', 'wp-server-stats' ),
+						'manage_options',
+						'wpss_memcache_info',
 						array( $this, 'memcache_details' )
 					);
 				}
@@ -707,7 +707,7 @@ if ( is_admin() ) {
 				?>
 				<div class="wrap wpss_info">
 					<h1><?php _e( 'PHP Information - WP Server Stats', 'wp-server-stats' ); ?></h1>
-					<h3><?php _e( 'This page will show you the in-depth information about the PHP installasion on your server', 'wp-server-stats' ); ?></h3>
+					<h3><?php _e( 'This page will show you the in-depth information about the PHP installation on your server', 'wp-server-stats' ); ?></h3>
 					<hr />
 					<?php
 					if( ! class_exists( 'DOMDocument' ) ) {
@@ -818,7 +818,7 @@ if ( is_admin() ) {
 							    $dbinfo = $wpdb->get_results("SHOW VARIABLES");
 							    update_option('wpss_db_advanced_info', $dbinfo);
 							}
-							
+
 						    if( !empty( $dbinfo ) ) {
 						        foreach( $dbinfo as $info ) {
 						            echo '<tr><td class="e">' . $info->Variable_name . '</td><td class="v">' . htmlspecialchars($info->Value) . '</td></tr>';
@@ -847,11 +847,11 @@ if ( is_admin() ) {
 					   	$usage = round( ( ( $memcachedinfo['bytes']/$memcachedinfo['limit_maxbytes'] ) * 100 ), 2 );
 					   	$uptime = number_format_i18n( ( $memcachedinfo['uptime']/60/60/24 ) );
 					}
-				
+
 				?>
 					<div class="wrap wpss_info">
 						<h1><?php _e( 'Memcached Information - WP Server Stats', 'wp-server-stats' ); ?></h1>
-						<h3><?php _e( 'This page will show you the in-depth information about your memcache server', 'wp-server-stats' ); ?></h3>
+						<h3><?php _e( 'This page will show you the in-depth information about your Memcached server', 'wp-server-stats' ); ?></h3>
 						<hr />
 						<table class="widefat">
 							<thead>
@@ -1034,13 +1034,13 @@ if ( is_admin() ) {
 					<div class="wrap">
 						<h1><?php _e( 'WP Server Stats Settings', 'wp-server-stats' ); ?></h1>
 						<h3><?php _e( 'On this page you will be able to change some critical settings of WP Server Stats', 'wp-server-stats' ); ?></h3>
-						<h4><?php _e( 'Please note the below form uses HTML5, so, make sure you are using any of the HTML5 compliance browsers like IE v11+, Microsoft Edge, Chrome v49+, Firefix v47+, Safari v9.1+, Opera v39+', 'wp-server-stats' ); ?></h4>
+						<h4><?php _e( 'Please note the form below uses HTML5, so, make sure you are using any of the HTML5 compliance browsers like IE v11+, Microsoft Edge, Chrome v49+, Firefix v47+, Safari v9.1+, Opera v39+', 'wp-server-stats' ); ?></h4>
 						<hr />
 						<div id="wpss-main">
 							<form action="options.php" method="post" accept-charset="utf-8">
 								<?php
 									//Populate the admin settings page using WordPress Settings API
-						            settings_fields('wp_server_stats');      
+						            settings_fields('wp_server_stats');
 						            do_settings_sections('wp_server_stats');
 						            submit_button();
 
@@ -1057,22 +1057,22 @@ if ( is_admin() ) {
 							<ul class="user-info">
 								<li>
 									<strong class="highlight"><?php _e('Refresh Interval', 'wp-server-stats'); ?></strong>
-									<?php _e('This denotes the interval time after which the shell commands will execute again to give you the current load details. By default it is set to 200ms, but if you are seeing CPU load increase after instealling this plugin, try to increase the interval time to 1000ms, 2000ms, 3000ms or more until you see a normal CPU load. Generally it is not recommended to change the value unless you are having extremely high CPU load due to this plugin.', 'wp-server-stats' ); ?>
+									<?php _e('This denotes the interval time after which the shell commands will execute again to give you the current load details. By default it is set to 200ms, but if you are seeing CPU load increase after installing this plugin, try to increase the interval time to 1000ms, 2000ms, 3000ms or more until you see a normal CPU load. Generally it is not recommended to change the value unless you are having extremely high CPU load due to this plugin.', 'wp-server-stats' ); ?>
 								</li>
 								<li>
 									<strong class="highlight"><?php _e('Status Bar & Footer Text Color', 'wp-server-stats'); ?></strong>
-									<?php _e('In case you do not like the color scheme I have used on this plugin, you can easily change those colors.', 'wp-server-stats' ); ?>
+									<?php _e('In case you do not like the color scheme I have used in this plugin, you can easily change those colors.', 'wp-server-stats' ); ?>
 								</li>
 								<li>
 									<strong class="highlight"><?php _e('Memcached Server Host & Port', 'wp-server-stats'); ?></strong>
-									<?php _e('Memcached is a general-purpose distributed memory caching system. It is often used to speed up dynamic database-driven websites by caching data and objects in RAM to reduce the number of times an external data source must be read. But in most Shared Hosting servers Memcached will not be enabled. This generally used in personal VPS or Dedicated servers.', 'wp-server-stats'); ?>
+									<?php _e('Memcached is a general-purpose distributed memory caching system. It is often used to speed up dynamic database-driven websites by caching data and objects in RAM to reduce the number of times an external data source must be read. But in most Shared Hosting servers Memcached will not be enabled. Memcached is generally used in personal VPS or Dedicated servers.', 'wp-server-stats'); ?>
 									<br />
-									<?php _e('So, if you are using a shared hosting server, chances are Memcached is not enabled on your server. In this case you don\'t need to change any of the Memcached settings on the left side. But if you are using a VPS or dedicated server which has Memcached enabled, make sure the Memcached Host & Port details has been provided properly on the settings. If you don\'t have these details, please contact your host and ask them about it.' , 'wp-server-stats'); ?>
+									<?php _e('If you are using a shared hosting server, chances are Memcached is not enabled on your server. In this case you don\'t need to change any of the Memcached settings on the left side. But if you are using a VPS or dedicated server which has Memcached enabled, make sure the Memcached Host & Port details has been provided properly in the settings. If you don\'t have these details, please contact your host and ask them about it.' , 'wp-server-stats'); ?>
 								</li>
 							</ul>
 							<hr />
 							<h2><?php _e('Support the plugin', 'wp-server-stats'); ?></h2>
-							<p><?php _e('Believe it or not, developing a WorPress plugin really takes quite a lot of time to develop, test and to do continuous bugfix. Moreover as I\'m sharing this plugin for free, so all those times I\'ve spent coding this plugin yeild no revenue. So, overtime it become really hard to keep spending time on this plugin. So, if you like this plugin, I will really appriciate if you consider donating some amount for this plugin. Which will help me keep spending time on this plugin and make it even better. Please donate, if you can.', 'wp-server-stats'); ?></p>
+							<p><?php _e('Believe it or not, developing a WordPress plugin really takes quite a lot of time to develop, test and to do continuous bug fixing. Moreover, as I\'m sharing this plugin for free, so all those times I\'ve spent coding this plugin yield no revenue. So, overtime it becomes really hard to keep spending time on this plugin. So, if you like this plugin, I will really appreciate it if you would consider donating some amount for this plugin. Which will help me keep spending time on this plugin and make it even better. Please donate, if you can.', 'wp-server-stats'); ?></p>
 							<a href="https://donate.isaumya.com/" class="content-center" target="_blank">
 								<img src ="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" />
 							</a>
@@ -1084,13 +1084,13 @@ if ( is_admin() ) {
 			/**
 			 * Function that will register admin page options.
 			 */
-			public function register_page_options() { 
+			public function register_page_options() {
 				/* Let's call the fetch data function */
 				$this->fetch_data();
-			     
+
 			    // Add Section for option fields
 			    add_settings_section( 'wpss_section', __( 'Change the WP Server Stats Settings', 'wp-server-stats' ), array( $this, 'display_section' ), 'wp_server_stats' ); // id, title, display cb, page
-			     
+
 			    // Add Title Field
 			    add_settings_field( 'wpss_refresh_interval_field', __( 'Set the realtime script refresh inverval (in ms) [1sec = 1000ms]', 'wp-server-stats' ), array( $this, 'refresh_interval_settings_field' ), 'wp_server_stats', 'wpss_section' ); // id, title, display cb, page, section
 
@@ -1101,7 +1101,7 @@ if ( is_admin() ) {
 			    // Fields for ip-api.com pro support section
 			    add_settings_field( 'wpss_use_ipapi_pro', __( 'Do you want to use the IP-API Pro key?', 'wp-server-stats' ), array( $this, 'use_ipapi_pro' ), 'wp_server_stats', 'wpss_section' ); // id, title, display cb, page, section
 			    add_settings_field( 'wpss_ipapi_pro_key', __( 'Provide your IP-API Pro key', 'wp-server-stats' ), array( $this, 'ipapi_pro_key' ), 'wp_server_stats', 'wpss_section' ); // id, title, display cb, page, section
-			     
+
 			    // Add Background Color Field
 			    add_settings_field( 'wpss_bg_field_good', __( 'Realtime Status Bar Background Color - For Good Status', 'wp-server-stats' ), array( $this, 'bg_settings_field_good' ), 'wp_server_stats', 'wpss_section' ); // id, title, display cb, page, section
 
@@ -1110,20 +1110,20 @@ if ( is_admin() ) {
 			    add_settings_field( 'wpss_bg_field_bad', __( 'Realtime Status Bar Background Color - For Super Critical Status', 'wp-server-stats' ), array( $this, 'bg_settings_field_bad' ), 'wp_server_stats', 'wpss_section' );
 
 			    add_settings_field( 'wpss_footer_text_color', __( 'Footer Text Color', 'wp-server-stats' ), array( $this, 'footer_text_color' ), 'wp_server_stats', 'wpss_section' );
-			     
+
 			    // Register Settings
-			    register_setting( 'wp_server_stats', 'wpss_settings_options', array( $this, 'validate_options' ) ); // option group, option name, sanitize cb 
+			    register_setting( 'wp_server_stats', 'wpss_settings_options', array( $this, 'validate_options' ) ); // option group, option name, sanitize cb
 			}
 
 			/**
 		     * Callback function for settings section
 		    **/
-		    public function display_section() { /* Leave blank */ } 
+		    public function display_section() { /* Leave blank */ }
 
 			/**
 			 * Functions that display the fields.
 			 */
-			public function refresh_interval_settings_field() { 
+			public function refresh_interval_settings_field() {
 			    echo '<input type="number" name="wpss_settings_options[refresh_interval]" value="' . $this->refresh_interval  . '" />';
 			}
 
@@ -1139,10 +1139,10 @@ if ( is_admin() ) {
 				$this->fetch_data();
 				$options = get_option( 'wpss_settings_options' );
 				?>
-				<input type="radio" name="wpss_settings_options[use_ipapi_pro]" value="Yes" <?php checked( empty( $options['use_ipapi_pro'] ) ? $this->use_ipapi_pro : $options['use_ipapi_pro'], 'Yes' ) ?> /> 
+				<input type="radio" name="wpss_settings_options[use_ipapi_pro]" value="Yes" <?php checked( empty( $options['use_ipapi_pro'] ) ? $this->use_ipapi_pro : $options['use_ipapi_pro'], 'Yes' ) ?> />
 				<span><?php _e( 'Yes', 'wp-server-stats' ); ?></span>
-				
-				<input type="radio" name="wpss_settings_options[use_ipapi_pro]" value="No" <?php checked( empty( $options['use_ipapi_pro'] ) ? $this->use_ipapi_pro : $options['use_ipapi_pro'], 'No' ) ?> /> 
+
+				<input type="radio" name="wpss_settings_options[use_ipapi_pro]" value="No" <?php checked( empty( $options['use_ipapi_pro'] ) ? $this->use_ipapi_pro : $options['use_ipapi_pro'], 'No' ) ?> />
 				<span><?php _e( 'No', 'wp-server-stats' ); ?></span>
 				<br />
 				<p><?php printf( __( 'By default this plugin uses the free API from %1$sIP-API.com%2$s which allows %3$s150 requests/min%4$s. But for high traffic websites, this might be very small and may generate %3$s503 Error%4$s if you try to do more than %3$s150 req/min%4$s. To resolve this problem, you can use the %5$sPaid Version of IP-API%6$s and provide your paid key below which will allow you to do %7$sUnlimited%8$s nuber of requests.', 'wp-server-stats'),
@@ -1165,30 +1165,30 @@ if ( is_admin() ) {
 				</p>
 				<?php
 			}
-			 
-			public function bg_settings_field_good() { 
+
+			public function bg_settings_field_good() {
 			    echo '<input type="text" name="wpss_settings_options[bg_color_good]" value="' . $this->bg_color_good . '" class="wpss-color-picker" />';
 			}
 
-			public function bg_settings_field_avg() { 
+			public function bg_settings_field_avg() {
 			    echo '<input type="text" name="wpss_settings_options[bg_color_average]" value="' . $this->bg_color_average . '" class="wpss-color-picker" />';
 			}
 
-			public function bg_settings_field_bad() { 
+			public function bg_settings_field_bad() {
 			    echo '<input type="text" name="wpss_settings_options[bg_color_bad]" value="' . $this->bg_color_bad . '" class="wpss-color-picker" />';
 			}
 
-			public function footer_text_color() { 
+			public function footer_text_color() {
 			    echo '<input type="text" name="wpss_settings_options[footer_text_color]" value="' . $this->footer_text_color . '" class="wpss-color-picker" />';
 			}
 
 			/**
 			 * Function that will validate all fields.
 			 */
-			public function validate_options( $fields ) { 
-			     
+			public function validate_options( $fields ) {
+
 			    $valid_fields = array();
-			     
+
 			    // Validate Title Field
 			    $refresh_interval = trim( $fields['refresh_interval'] );
 			    $valid_fields['refresh_interval'] = strip_tags( stripslashes( $refresh_interval ) );
@@ -1202,7 +1202,7 @@ if ( is_admin() ) {
 			    $valid_fields['use_ipapi_pro'] = strip_tags( stripslashes( trim( $fields['use_ipapi_pro'] ) ) );
 
 			    $valid_fields['ipapi_pro_key'] = strip_tags( stripslashes( trim( $fields['ipapi_pro_key'] ) ) );
-			     
+
 			    // Validate color section
 			    foreach ( $fields as $key => $value ) {
 			    	if( preg_match('/_color/', $key) ) {
@@ -1211,7 +1211,7 @@ if ( is_admin() ) {
 
 			    		// Check if is a valid hex color
 					    if( FALSE === $this->check_color( $color[ $key ] ) ) {
-					    	
+
 					    	if( $key == "bg_color_good" ) {
 					    		$error_text = __("Insert a valid color for Realtime Status Bar Background Color - For Good Status", "wp-server-stats");
 					    	} elseif ( $key == "bg_color_average" ) {
@@ -1223,30 +1223,30 @@ if ( is_admin() ) {
 					    	}
 					        // Set the error message
 					        add_settings_error( 'wpss_settings_options', 'wpss_bg_error', $error_text, 'error' ); // $setting, $code, $message, $type
-					         
+
 					        // Get the previous valid value
 					        $valid_fields[ $key ] = $this->{$key};
-					     
+
 					    } else {
-					     
-					        $valid_fields[ $key ] = $color[ $key ];  
-					     
+
+					        $valid_fields[ $key ] = $color[ $key ];
+
 					    }
 			    	}
 			    }
-			     
+
 			    return apply_filters( 'validate_options', $valid_fields, $fields);
 			}
-			 
+
 			/**
 			 * Function that will check if value is a valid HEX color.
 			 */
-			public function check_color( $value ) { 
-			     
-			    if ( preg_match( '/^#[a-f0-9]{6}$/i', $value ) ) { // if user insert a HEX color with #     
+			public function check_color( $value ) {
+
+			    if ( preg_match( '/^#[a-f0-9]{6}$/i', $value ) ) { // if user insert a HEX color with #
 			        return true;
 			    }
-			     
+
 			    return false;
 			}
 
@@ -1254,8 +1254,8 @@ if ( is_admin() ) {
 				settings_errors( 'wpss_settings_options' );
 
 				$class = 'notice notice-success is-dismissible wpss_donate_notice';
-		    	$message = sprintf( 
-					__('%1$sThank you%2$s for installing %1$sWP Server Stats%2$s. It took 250+ hours to code, design, test and include many useful server info that you like so much to show up in your WordPress dashboard. But as this is a <strong>free plugin</strong>, all of these time and effort does not generate any revenue. Also as I\'m not a very privileged person, so earning revenue matters to me for keeping my lights on and keep me motivated to do the work I love. %3$s So, if you enjoy this plugin and understand the huge effort I put into this, please consider %1$s%4$sdonating some amount%5$s (no matter how small)%2$s for keeping aliave the development of this plugin. Thank you again for using my plugin. Also if you love using this plugin, I would really appiciate if you take 2 minutes out of your busy schedule to %1$s%6$sshare your review%7$s%2$s about this plugin.', 'wp-server-stats'),
+		    	$message = sprintf(
+					__('%1$sThank you%2$s for installing %1$sWP Server Stats%2$s. It took many countless hours to code, design, test and include useful server info to show up in your WordPress dashboard. As this is a <strong>free plugin</strong>, all of these time and effort does not generate any revenue. I am not a very privileged person, so earning revenue matters to me for keeping my lights on and keeping me motivated to do the work I love. %3$s So, if you enjoy this plugin and understand the huge effort I put into this, please consider %1$s%4$sdonating some amount%5$s (no matter how small)%2$s to keep alive the development of this plugin. Thank you again for using my plugin. If you love using this plugin, I would really appreciate it if you took 2 minutes out of your busy schedule to %1$s%6$sshare your review%7$s%2$s about this plugin.', 'wp-server-stats'),
 					'<strong>', '</strong>',
 					'<br /> <br />',
 					'<a href="https://donate.isaumya.com" target="_blank" rel="external" title="WP Server Stats - Plugin Donation">', '</a>',
@@ -1362,7 +1362,7 @@ if ( is_admin() ) {
 						$this->footer_text_color = $fetched_data['footer_text_color'];
 					} else {
 						$this->footer_text_color = "#8e44ad";
-					}	
+					}
 				} else {
 					$this->refresh_interval = 200; // default refresh interval is 200ms
 					$this->bg_color_good = "#37BF91";

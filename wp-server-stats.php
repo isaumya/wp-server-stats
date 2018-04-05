@@ -254,7 +254,7 @@ if ( is_admin() ) {
 
 			public function check_free_ram() {
 				if( $this->isShellEnabled() ) {
-					$free_ram = shell_exec( "grep -w 'MemFree' /proc/meminfo | grep -o -E '[0-9]+'" );
+					$free_ram = shell_exec( "grep -w 'MemAvailable' /proc/meminfo | grep -o -E '[0-9]+'" );
 				} else {
 					$free_ram = 'ERROR EXEC096T';
 				}

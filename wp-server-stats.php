@@ -5,7 +5,7 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.5.8
+Version: 1.6.0
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -192,7 +192,7 @@ if ( is_admin() ) {
 
 			public function isShellEnabled() {
 				/*Check if shell_exec() is enabled on this server*/
-			    if( function_exists('shell_exec') && !in_array('shell_exec', array_map('trim', explode(', ', ini_get('disable_functions')))) && strtolower(ini_get('safe_mode')) != 1 ) {
+			    if( function_exists('shell_exec') && !in_array('shell_exec', array_map('trim', explode(', ', ini_get('disable_functions')))) ) {
 			    	/*If enabled, check if shell_exec() actually have execution power*/
 			    	$returnVal = shell_exec('cat /proc/cpuinfo');
 			    	if( !empty( $returnVal ) ) {
@@ -448,15 +448,6 @@ if ( is_admin() ) {
 		        return $short_tag;
 		    }
 
-		    public function php_safe_mode() {
-		    	if( ini_get('safe_mode') ){
-				   $safe_mode = __('On', 'wp-server-stats');
-				}else{
-				   $safe_mode = __('Off', 'wp-server-stats');
-				}
-				return $safe_mode;
-		    }
-
 			public function load_admin_scripts() {
 				/* CSS Calls */
 				wp_enqueue_style('flipclock', plugin_dir_url( __FILE__ ) . 'assets/css/flipclock.min.css', array(), '0.7.3');
@@ -488,22 +479,20 @@ if ( is_admin() ) {
 					$memory_usage_MB = function_exists('memory_get_usage') ? round(memory_get_usage() / 1024 / 1024, 2) : 0;
 					$memory_usage_pos = round ( ( ( $memory_usage_MB / (int) $this->check_memory_limit_cal() ) * 100 ), 0);
 					$total_ram_server = ( is_numeric( $this->check_total_ram() ) ? $this->check_total_ram() : 0 );
-					$free_ram_server = ( is_numeric( $this->check_free_ram() ) ? $this->format_filesize_kB( $this->check_free_ram() ) : "0 KB" );
-					$ram_usage_pos = round( 
-						( 
-							( 
-								( is_numeric( $this->check_free_ram() ) ? $this->check_free_ram() : 0 ) 
-								/ $total_ram_server 
-							) * 100 
-						), 0 
-					);
+					$free_ram_server = ( is_numeric( $this->check_free_ram() ) ? $this->check_free_ram() : 0 );
+					$free_ram_server_formatted = ( is_numeric( $free_ram_server ) ? $this->format_filesize_kB( $free_ram_server ) : "0 KB" );
+					$used_ram_server = ( $total_ram_server - $free_ram_server );
+					$used_ram_server_formatted = ( is_numeric( $used_ram_server ) ? $this->format_filesize_kB( $used_ram_server ) : "0 KB" );
+					$ram_usage_pos = round( ( ( $used_ram_server / $total_ram_server ) * 100 ), 0 );
+
 					$uptime = trim( shell_exec("cut -d. -f1 /proc/uptime") );
 					$json_out = array (
 							'cpu_load'			=> $cpu_load,
 							'memory_usage_MB'	=> $memory_usage_MB,
 							'memory_usage_pos'	=> $memory_usage_pos,
 							'total_ram'			=> $total_ram_server,
-							'free_ram'			=> $free_ram_server,
+							'free_ram'			=> $free_ram_server_formatted,
+							'used_ram'			=> $used_ram_server_formatted,
 							'ram_usage_pos'		=> $ram_usage_pos,
 							'uptime' 			=> $uptime,
 							'refresh_interval' 	=> $this->refresh_interval,
@@ -546,6 +535,7 @@ if ( is_admin() ) {
 							<?php if( $this->isShellEnabled() ) : ?>
 							<li><strong><?php _e('Total CPUs', 'wp-server-stats'); ?></strong> : <span><?php echo $this->check_cpu_count() . ' / ' . $this->check_core_count() . __('Cores', 'wp-server-stats'); ?></span></li>
 							<li><strong><?php _e('Total RAM', 'wp-server-stats'); ?></strong> : <span><?php echo ( is_numeric( $this->check_total_ram() ) ? $this->format_filesize_kB( $this->check_total_ram() ) : $this->check_total_ram() ); ?></span></li>
+							<li><strong><?php _e('Real Time Free RAM', 'wp-server-stats'); ?></strong> : <span id="realtime_free_ram"></span></li>
 							<li><strong><?php _e('Real Time RAM Usage', 'wp-server-stats'); ?></strong> : <span id="realtime_ram_usage"></span></li>
 							<?php endif; ?>
 						<ul>
@@ -590,7 +580,6 @@ if ( is_admin() ) {
 							<li><strong><?php _e('PHP Max Upload Size', 'wp-server-stats'); ?></strong> : <span><?php echo $this->php_max_upload_size(); ?></span></li>
 							<li><strong><?php _e('PHP Max Post Size', 'wp-server-stats'); ?></strong> : <span><?php echo $this->php_max_post_size(); ?></span></li>
 							<li><strong><?php _e('PHP Max Execution Time', 'wp-server-stats'); ?></strong> : <span><?php echo $this->php_max_execution_time() . " " . __("sec", "wp-server-stats"); ?></span></li>
-							<li><strong><?php _e('PHP Safe Mode', 'wp-server-stats'); ?></strong> : <span><?php echo $this->php_safe_mode(); ?></span></li>
 							<li><strong><?php _e('PHP Short Tag', 'wp-server-stats'); ?></strong> : <span><?php echo $this->php_short_tag(); ?></span></li>
 							<li><strong><?php _e('PHP Memory Limit', 'wp-server-stats'); ?></strong> : <span><?php echo $this->check_limit(); ?></span></li>
 							<li><strong><?php _e('Real Time PHP Memory Usage', 'wp-server-stats'); ?></strong> : <span id="mem_usage_mb"></span></li>
@@ -1255,7 +1244,7 @@ if ( is_admin() ) {
 
 				$class = 'notice notice-success is-dismissible wpss_donate_notice';
 		    	$message = sprintf( 
-					__('%1$sThank you%2$s for installing %1$sWP Server Stats%2$s. It took 250+ hours to code, design, test and include many useful server info that you like so much to show up in your WordPress dashboard. But as this is a <strong>free plugin</strong>, all of these time and effort does not generate any revenue. Also as I\'m not a very privileged person, so earning revenue matters to me for keeping my lights on and keep me motivated to do the work I love. %3$s So, if you enjoy this plugin and understand the huge effort I put into this, please consider %1$s%4$sdonating some amount%5$s (no matter how small)%2$s for keeping aliave the development of this plugin. Thank you again for using my plugin. Also if you love using this plugin, I would really appiciate if you take 2 minutes out of your busy schedule to %1$s%6$sshare your review%7$s%2$s about this plugin.', 'wp-server-stats'),
+					__('%1$sThank you%2$s for installing %1$sWP Server Stats%2$s. It took 450+ hours to code, design, test and include many useful server info that you like so much to show up in your WordPress dashboard. But as this is a <strong>free plugin</strong>, all of these time and effort does not generate any revenue. Also as I\'m not a very privileged person, so earning revenue matters to me for keeping my lights on and keep me motivated to do the work I love. %3$s So, if you enjoy this plugin and understand the huge effort I put into this, please consider %1$s%4$sdonating some amount%5$s (no matter how small)%2$s for keeping aliave the development of this plugin. Thank you again for using my plugin. Also if you love using this plugin, I would really appiciate if you take 2 minutes out of your busy schedule to %1$s%6$sshare your review%7$s%2$s about this plugin.', 'wp-server-stats'),
 					'<strong>', '</strong>',
 					'<br /> <br />',
 					'<a href="https://donate.isaumya.com" target="_blank" rel="external" title="WP Server Stats - Plugin Donation">', '</a>',
@@ -1404,5 +1393,8 @@ if ( is_admin() ) {
 	} //end of checking if wp_server_stats already existsi or not
 
 	// Start this plugin once all other plugins are fully loaded
-	add_action( 'plugins_loaded', create_function('', '$memory = new wp_server_stats();') );
+	function wpss_create_obj() {
+		$memory = new wp_server_stats();
+	}
+	add_action( 'plugins_loaded', 'wpss_create_obj' );
 }

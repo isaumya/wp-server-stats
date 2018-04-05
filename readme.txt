@@ -5,9 +5,9 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Donate link: http://donate.isaumya.com/
 Tags: dashboard, widget, server, stats, information, admin, isaumya
 Requires at least: 4.2
-Tested up to: 4.9
+Tested up to: 5.0
 
-Stable Tag: 1.5.8
+Stable Tag: 1.6.0
 
 License: GNU Version 2 or Any Later Version
 
@@ -19,7 +19,7 @@ WP Server Stats plugin will give you the ability to monitor your WordPress site 
 
 Also now you don't have to contact your host every single time for minor things. You can easy see the server stats at your WP admin dashboard and take curtail decision based on that, like if enabling some plugin is consuming a lot of memory or CPU etc.
 
-> It took countless hours (250 hrs+) to code, design, test and include many useful server info that you like so much to show up in your WordPress dashboard. If you enjoy this plugin and understand the huge effort I put into this, please consider **[donating some amount](https://donate.isaumya.com/) (no matter how small)** for keeping aliave the development of this plugin. Thank you again for using my plugin. Also if you love using this plugin, I would really appiciate if you take 2 minutes out of your busy schedule to **[share your review](https://wordpress.org/support/plugin/wp-server-stats/reviews/)** about this plugin.
+> It took countless hours (450 hrs+) to code, design, test and include many useful server info that you like so much to show up in your WordPress dashboard. If you enjoy this plugin and understand the huge effort I put into this, please consider **[donating some amount](https://donate.isaumya.com/) (no matter how small)** for keeping alive the development of this plugin. Thank you again for using my plugin. Also if you love using this plugin, I would really applicate if you take 2 minutes out of your busy schedule to **[share your review](https://wordpress.org/support/plugin/wp-server-stats/reviews/)** about this plugin.
 
 Features of the plugin include:
 
@@ -27,12 +27,12 @@ Features of the plugin include:
 * Shows server software
 * Shows the server IP address
 * Shows server port
-* Shows server loacation
+* Shows server location
 * Shows server hostname
 * Shows server document root
 * Shows if Memcached is enabled on your server or not
 * If memcached is enabled it will show you a detailed information about your memcached installation, if provided right memcache host and port details in the **WP Server Stats** > **General Settings** page
-* Shows total number of allowed CPU for yoru site
+* Shows total number of allowed CPU for your site
 * Shows Realtime CPU usage percentage
 * Shows Total RAM allocated
 * Shows Real Time RAM Usage percentage
@@ -42,7 +42,7 @@ Features of the plugin include:
 * Shows maximum packet size of your database
 * Shows database disk usage
 * Shows database index disk usage
-* A seperate page to show up even more details about your database server
+* A separate page to show up even more details about your database server
 * Shows your PHP version number
 * Shows your PHP max upload size limit
 * Shows PHP max post size
@@ -51,11 +51,11 @@ Features of the plugin include:
 * Shows if PHP short tag is on or off
 * Shows allowed PHP memory for your WordPress site
 * Realtime Amount & Percentage of your PHP memory usage
-* A seperate page to show up even more details about your install PHP & it's various modules
+* A separate page to show up even more details about your install PHP & it's various modules
 * Realtime PHP Memory, RAM Usage & CPU info bar changes color based on the load (you can change the colors from the WP Server Stats General Settings Page)
 * Designed with flat colors (you can change the color scheme if you want)
 * Realtime PHP Memory, RAM Usage & CPU usage info at the admin footer so that no matter what admin page you are, you can always see it
-* Uses advanced WordPress Trainsient Caching mechanism to run the plugin super smooth without eating a lot of server resource. All the cache data will be auto expired on each week and then the plugin will re-cache the updated data again, to **ensure the least possible resource consumption by the plugin**
+* Uses advanced WordPress Transient Caching mechanism to run the plugin super smooth without eating a lot of server resource. All the cache data will be auto expired on each week and then the plugin will re-cache the updated data again, to **ensure the least possible resource consumption by the plugin**
 * Only shows to the Administrators. For Multisite, it will show the details to each site administrators, but not the network admins
 * Option to change the realtime script refresh interval (default: 200ms), color scheme, memcache host and port details from the WP Server Stats - General Settings Page
 * Automatically removes all the data added by this plugin to your WordPress database upon uninstallation of the plugin
@@ -68,14 +68,14 @@ This plugin uses PHP `shell_exec()` function which is by default enabled by all 
 
 **Very Important Note**
 
-This plugin has been developed and tested for Linux based server only so there is a very high chance that it might NOT work for Windows based servers. So I highly recommend this plugin to be used by those users who uses a Linux based server.
-I currently has no plan to add Windows Server support as a very tiny amount of people still use Windows Server in this Linux age. I may add Windows support in future.
+This plugin has been developed and tested for Linux based server only so there is a very high chance that it might NOT work for Windows based servers. So, I highly recommend this plugin to be used by those users who uses a Linux based server.
+I currently have no plan to add Windows Server support as a very tiny amount of people still use Windows Server in this Linux age. I may add Windows support in future.
 
 **ERROR Code List**
 
 **EXEC096T** - PHP `shell_exec()` function has not been enabled in your account, which this plugin highly needs to run properly. So contact your server host and ask them to enable PHP `shell_exec()` function for your account.
 
-**IP096T** - Your server is not returning the IP properly. There is definately some issue with your server configuration. Please contact your host and tell then that PHP `gethostbyname( gethostname() )` is unable to get the server IP, ask them to look into thier server configuration and to fix the configuration issue. If you have a self hosted VPS or dedicated server, the reason is still the same. If you are unable to find the configuartion issue inside your server, I highly suggest you to hire a knowledgable server admin to look into your server. In most cases you should never get this error message.
+**IP096T** - Your server is not returning the IP properly. There is definately some issue with your server configuration. Please contact your host and tell them that PHP `gethostbyname( gethostname() )` is unable to get the server IP, ask them to look into their server configuration and to fix the configuration issue. If you have a self-hosted VPS or dedicated server, the reason is still the same. If you are unable to find the configuration issue inside your server, I highly suggest you to hire a knowledgeable server admin to look into your server. In most cases you should never get this error message.
 
 **Languages**
 
@@ -83,7 +83,7 @@ WP Server Stats is 100% compatible with translation and you can translate any te
 
 **Very Special Thanks**
 
-The list of people whom I wanna specially thanks without whom this plugin would have never been completed.
+The list of people whom I want to specially thanks without whom this plugin would have never been completed.
 
 * Justin Catello from [BigScoots Hosting](https://www.isaumya.com/refer/bigscoots) - Looking for quality managed SSD hosting? Go with [BigScoot Hosting](http://www.bigscoots.com/portal/?affid=261) keeping your eye closed. They are that much good.
 * [Pippin Williamson](https://twitter.com/pippinsplugins) from [Easy Digital Download](https://easydigitaldownloads.com/)
@@ -125,9 +125,14 @@ No. This plugin uses PHP `shell_exec()` function which is by default enabled by 
 
 **EXEC096T** - PHP `shell_exec()` function has not been enabled in your account, which this plugin highly needs to run properly. So contact your server host and ask them to enable PHP `shell_exec()` function for your account.
 
-**IP096T** - Your server is not returning the IP properly. There is definately some issue with your server configuration. Please contact your host and tell then that PHP `gethostbyname( gethostname() )` is unable to get the server IP, ask them to look into thier server configuration and to fix the configuration issue. If you have a self hosted VPS or dedicated server, the reason is still the same. If you are unable to find the configuartion issue inside your server, I highly suggest you to hire a knowledgable server admin to look into your server. In most cases you should never get this error message.
+**IP096T** - Your server is not returning the IP properly. There is definitely some issue with your server configuration. Please contact your host and tell then that PHP `gethostbyname( gethostname() )` is unable to get the server IP, ask them to look into their server configuration and to fix the configuration issue. If you have a self hosted VPS or dedicated server, the reason is still the same. If you are unable to find the configuration issue inside your server, I highly suggest you to hire a knowledgeable server admin to look into your server. In most cases you should never get this error message.
 
 == Changelog ==
+
+= 1.6.0, February 11, 2018 =
+
+* Fixed a major calculation issue with RAM
+* Now shows Real Time Free RAM in the dashboard stats
 
 = 1.5.8, November 24, 2017 =
 
@@ -143,7 +148,7 @@ No. This plugin uses PHP `shell_exec()` function which is by default enabled by 
 
 = 1.5.5, November 5, 2017 =
 
-* Fixed a major calculation issue with v1.5.4. If you are running v1.5.4, please update to v1.5.5 immidiately.
+* Fixed a major calculation issue with v1.5.4. If you are running v1.5.4, please update to v1.5.5 immediately.
 * Now the actual RAM usage also shows up in the dashboard section
 
 = 1.5.4, November 5, 2017 =
@@ -157,7 +162,7 @@ No. This plugin uses PHP `shell_exec()` function which is by default enabled by 
 
 = 1.5.0, 1.5.1, 1.5.2, December 14 & 15, 2016 =
 
-* Permanently fixed the welcome notice keep showing issue for good. Now no matter what kind of server you are installing this plugin and what kind of cache architechture it has, once you dismiss the welcome notice, it will never show up again unless you delete and reinstall the plugin.
+* Permanently fixed the welcome notice keep showing issue for good. Now no matter what kind of server you are installing this plugin and what kind of cache architecture it has, once you dismiss the welcome notice, it will never show up again unless you delete and reinstall the plugin.
 
 = 1.4.9, December 2, 2016 =
 
@@ -166,7 +171,7 @@ No. This plugin uses PHP `shell_exec()` function which is by default enabled by 
 = 1.4.8, November 27, 2016 =
 
 * Updated the donation link
-* Fixed sime issues with uninstallation calls
+* Fixed some issues with uninstallation calls
 * Fixed a responsive design issue
 
 = 1.4.7, November 17, 2016 =
@@ -201,14 +206,14 @@ No. This plugin uses PHP `shell_exec()` function which is by default enabled by 
 * Added ability to show up maximum packet size of your database
 * Added ability to show up database disk usage
 * Added ability to show up database index disk usage
-* Added ability to show up a seperate page with more details about your database server
+* Added ability to show up a separate page with more details about your database server
 * Added ability to show up your PHP max upload size limit
 * Added ability to show up PHP max post size
 * Added ability to show up PHP max execution time
 * Added ability to show up if PHP safe mode is on or off
 * Added ability to show up if PHP short tag is on or off
 * Added ability to show up allowed PHP memory for your WordPress site
-* Added ability to show up a seperate page to with more details about your install PHP & it's various modules
+* Added ability to show up a separate page to with more details about your install PHP & it's various modules
 * Added advanced WordPress Trainsient Caching mechanism to run the plugin super smooth without eating a lot of server resource. All the cache data will be auto expired on each week and then the plugin will re-cache the updated data again, to ensure the least possible resource consumption by the plugin
 * Option to change the realtime script refresh interval (default: 200ms), color scheme, memcache host and port details from the WP Server Stats - General Settings Page
 * Automatically removes all the data added by this plugin to your WordPress database upon uninstallation of the plugin
@@ -237,7 +242,7 @@ No. This plugin uses PHP `shell_exec()` function which is by default enabled by 
 = 1.1.9, June 24, 2016 =
 
 * Code quality improvement
-* Shell ececution logic improvement
+* Shell execution logic improvement
 * New clean notice for people who doesn't have `shell_exec()` enabled/ececutable on their server
 * Various minor bug fix
 * New screenshot added for non `shel_exec()` enabled people
@@ -305,4 +310,4 @@ No. This plugin uses PHP `shell_exec()` function which is by default enabled by 
 
 = 1.0.0, October 27, 2015 =
 
-* First offical release!
+* First official release!

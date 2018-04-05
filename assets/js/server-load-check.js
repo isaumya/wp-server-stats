@@ -68,8 +68,9 @@
 					});
 
 					/*Fetching RAM Usage*/
-					$('#realtime_ram_usage').html( response.free_ram );
-					$('#ram_usage_footer').html( response.free_ram );
+					$('#realtime_ram_usage').html( response.used_ram );
+					$('#realtime_free_ram').html( response.free_ram );
+					$('#ram_usage_footer').html( response.used_ram );
 
 					/*Fetching RAM load in percentage*/
 					var ram_usage_pos = response.ram_usage_pos;

@@ -14,7 +14,7 @@ Monitor your WordPress site the right way with most important server stats like 
 
 **Requires at least:** 4.2
 
-**Tested up to:** 4.9
+**Tested up to:** 5.2
 
 **License:** MIT
 

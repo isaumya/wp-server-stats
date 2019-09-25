@@ -5,14 +5,14 @@ Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://www.isaumya.com/
-Version: 1.6.5
+Version: 1.6.8
 Text Domain: wp-server-stats
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 /*
-Copyright 2012-2018 by Saumya Majumder 
+Copyright 2012-2019 by Saumya Majumder 
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+*/
 
 defined('ABSPATH') or die('No script kiddies please!');
 
@@ -336,15 +336,49 @@ if (is_admin()) {
 				return trim($total_ram);
 			}
 
+			/**
+			 * @return int|null|string
+			**/
+			public function check_ram_cache() {
+				if ($this->isShellEnabled()) {
+					$ram_cache = shell_exec("grep -w 'Cached' /proc/meminfo | grep -o -E '[0-9]+'");
+				} else {
+					$ram_cache= 'ERROR EXEC096T';
+				}
+
+				return trim($ram_cache);
+			}
+			
+			/**
+			 * @return int|null|string
+			**/
+			public function check_ram_buffer() {
+				if ($this->isShellEnabled()) {
+					$ram_buffer = shell_exec("grep -w 'Buffers' /proc/meminfo | grep -o -E '[0-9]+'");
+				} else {
+					$ram_buffer= 'ERROR EXEC096T';
+				}
+
+				return trim($ram_buffer);
+			}
+
 			public function check_free_ram()
 			{
 				if ($this->isShellEnabled()) {
 					$free_ram = shell_exec("grep -w 'MemFree' /proc/meminfo | grep -o -E '[0-9]+'");
+
+					if( !is_null( $this->check_ram_cache() ) || !is_null( $this->check_ram_buffer() ) ) {
+						$ram_cache = is_null( $this->check_ram_cache() ) ? 0 : (int) $this->check_ram_cache();
+						$ram_buffer = is_null( $this->check_ram_buffer() ) ? 0 : (int) $this->check_ram_buffer();
+						$free_ram_final = (int) $free_ram + $ram_cache + $ram_buffer;
+					} else {
+						$free_ram_final = $free_ram;
+					}
 				} else {
-					$free_ram = 'ERROR EXEC096T';
+					$free_ram_final = 'ERROR EXEC096T';
 				}
 
-				return trim($free_ram);
+				return trim($free_ram_final);
 			}
 
 			public function server_os()
@@ -575,8 +609,8 @@ if (is_admin()) {
 					$cpu_load = trim(shell_exec("echo $((`ps aux|awk 'NR > 0 { s +=$3 }; END {print s}'| cut -d . -f 1` / `cat /proc/cpuinfo | grep cores | grep -o '[0-9]' | wc -l`))"));
 					$memory_usage_MB = function_exists('memory_get_usage') ? round(memory_get_usage() / 1024 / 1024, 2) : 0;
 					$memory_usage_pos = round((($memory_usage_MB / (int)$this->check_memory_limit_cal()) * 100), 0);
-					$total_ram_server = (is_numeric($this->check_total_ram()) ? $this->check_total_ram() : 0);
-					$free_ram_server = (is_numeric($this->check_free_ram()) ? $this->check_free_ram() : 0);
+					$total_ram_server = (is_numeric($this->check_total_ram()) ? (int) $this->check_total_ram() : 0);
+					$free_ram_server = (is_numeric($this->check_free_ram()) ? (int) $this->check_free_ram() : 0);
 					$free_ram_server_formatted = (is_numeric($free_ram_server) ? $this->format_filesize_kB($free_ram_server) : "0 KB");
 					$used_ram_server = ($total_ram_server - $free_ram_server);
 					$used_ram_server_formatted = (is_numeric($used_ram_server) ? $this->format_filesize_kB($used_ram_server) : "0 KB");

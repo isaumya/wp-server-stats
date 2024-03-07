@@ -310,7 +310,7 @@ if (is_admin()) {
 
 				if ($cpu_core_count === false) {
 					if ($this->isShellEnabled()) {
-						$cpu_core_count = shell_exec("echo \"$((`getconf _NPROCESSORS_ONLN` * `cat /proc/cpuinfo |grep 'physical id' | sort | uniq | wc -l`))\"");
+						$cpu_core_count = shell_exec("echo \"$((`cat /proc/cpuinfo | grep '^processor' | wc -l` * `cat /proc/cpuinfo |grep 'physical id' | sort | uniq | wc -l`))\"");
 						set_transient('wpss_cpu_core_count', $cpu_core_count, WEEK_IN_SECONDS);
 					} else {
 						$cpu_core_count = 'ERROR EXEC096T';
@@ -606,7 +606,7 @@ if (is_admin()) {
 
 				/* If Shell is enablelled then execute the CPU Load, Memory Load, RAM Load and Uptime */
 				if ($this->isShellEnabled()) {
-					$cpu_load = trim(shell_exec("echo $((`ps aux|awk 'NR > 0 { s +=$3 }; END {print s}'| cut -d . -f 1` / `getconf _NPROCESSORS_ONLN`))"));
+					$cpu_load = trim(shell_exec("echo $((`ps aux|awk 'NR > 0 { s +=$3 }; END {print s}'| cut -d . -f 1` / `cat /proc/cpuinfo | grep '^processor' | wc -l`))"));
 					$memory_usage_MB = function_exists('memory_get_usage') ? round(memory_get_usage() / 1024 / 1024, 2) : 0;
 					$memory_usage_pos = round((($memory_usage_MB / (int)$this->check_memory_limit_cal()) * 100), 0);
 					$total_ram_server = (is_numeric($this->check_total_ram()) ? (int) $this->check_total_ram() : 0);

@@ -154,6 +154,7 @@
 	$("li#wp-admin-bar-wpss-cache-purge .ab-item").on("click", function () {
 		var data = {
 			'action': 'wpss_cache_purge',
+      'wpss_nonce': server_load_check_vars.server_load_check_nonce
 		};
 
 		/* since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php */

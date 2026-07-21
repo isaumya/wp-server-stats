@@ -1,0 +1,13 @@
+.distignore
+.git
+.github
+.gitignore
+.gitattributes
+README.md
+LICENSE
+.DS_Store
+.claude
+aicp-admin-interface.css
+aicp.js
+jquery.iframetracker.js
+js.cookie.js

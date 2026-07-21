@@ -1,15 +1,15 @@
 === WP Server Health Stats ===
-Contributors: isaumya
-Author URI: https://www.isaumya.com
-Plugin URI: https://www.isaumya.com/portfolio-item/wp-server-stats/
-Donate link: http://donate.isaumya.com/
-Tags: dashboard, widget, server, health, server health, stats, information, admin, isaumya
-Requires at least: 4.2
-Tested up to: 5.3
+Contributors: isaumya, acnam
+Author URI: https://acnam.com/
+Plugin URI: https://wordpress.org/plugins/wp-server-stats/
+Donate link: https://paypal.me/acnamhq
+Tags: server, health, stats, information, isaumya
+Requires at least: 5.0
+Requires PHP: 7.4
+Tested up to: 6.5
+Stable Tag: 1.8.0
 
-Stable Tag: 1.6.8
-
-License: GNU Version 2 or Any Later Version
+License: GNU Version 3 or Any Later Version
 
 Monitor your WP site the right way with most important stats like Database, PHP details, PHP Memory, RAM Usage, CPU load, Server Uptime & more.
 
@@ -19,11 +19,14 @@ WP Server Health Stats plugin will give you the ability to monitor your WordPres
 
 Now you don't have to contact your host every single time for minor things. You can easily see the server health stats in your WP admin dashboard and make critical decisions based on that, like if enabling some plugin is consuming a lot of memory or CPU etc.
 
-> It took many countless hours to code, design, test and include useful server info to show up in your WordPress dashboard. If you enjoy this plugin and understand the huge effort I put into this, please consider **[donating some amount](https://donate.isaumya.com/) (no matter how small)** to keep alive the development of this plugin. Thank you again for using my plugin. If you love using this plugin, I would really appreciate it if you took 2 minutes out of your busy schedule to **[share your review](https://wordpress.org/support/plugin/wp-server-stats/reviews/)** about this plugin.
+**Please Note:** This plugin uses 3rd party systems [ip-api.com](http://ip-api.com/) to get the location details for the server IP. Please check their [Privacy Policy and Terms](https://www.ip-api.com/docs/legal). By default the plugin uses the free version of IP-API service but if you have purchased a premium version then you can enter your API key inside the plugin settings page.
+
+> It took many countless hours to code, design, test and include useful server info to show up in your WordPress dashboard. If you enjoy this plugin and understand the huge effort I put into this, please consider **[donating some amount](https://paypal.me/acnamhq) (no matter how small)** to keep alive the development of this plugin. Thank you again for using my plugin. If you love using this plugin, I would really appreciate it if you took 2 minutes out of your busy schedule to **[share your review](https://wordpress.org/support/plugin/wp-server-stats/reviews/)** about this plugin.
 
 === Q: After installing this plugin my server load has increased tremendously. How to fix this? ===
 
- >This plugin uses Ajax to call the server after an interval of time to get the latest data about the server, giving you the real-time update. By default, this happens after every 200ms. But if you are using a low-end server with fewer resources, calling the server after each 200ms can increase your server load drastically. You can easily solve this too. On the left-hand side menu of WP Admin panel, you will see a settings panel for **WP Server Stats** under that you will find another submenu called **General Settings**. Within general settings, the first option is to change the interval time. Change it to how much higher your want like 2000ms (2 sec) or maybe 20000ms (20 sec) depending on your need. Once you save the settings the plugin will call the server only after the interval you have set, reducing your server load back to how it was without this plugin.
+>This plugin uses Ajax to call the server after an interval of time to get the latest data about the server, giving you the real-time update. By default, this happens after every 200ms. But if you are using a low-end server with fewer resources, calling the server after each 200ms can increase your server load drastically. You can easily solve this too. On the left-hand side menu of WP Admin panel, you will see a settings panel for **WP Server Stats** under that you will find another sub-menu called **General Settings**. Within general settings, the first option is to change the interval time. Change it to how much higher your want like 2000ms (2 sec) or maybe 20000ms (20 sec) depending on your need. Once you save the settings the plugin will call the server only after the interval you have set, reducing your server load back to how it was without this plugin.
+
 But again, generally speaking, if you are in a decent to good hosting, you won't face this problem at all, as this a very lightweight plugin.
 
 Features of the plugin include:
@@ -62,7 +65,7 @@ Features of the plugin include:
 * Designed with flat colours (you can change the colour scheme if you want)
 * Realtime PHP Memory, RAM Usage & CPU usage info at the admin footer so that no matter what admin page you are, you can always see it
 * Uses advanced WordPress Transient Caching mechanism to run the plugin super smooth without eating a lot of server resources. All the cache data will be auto expired on each week and then the plugin will re-cache the updated data again, to **ensure the least possible resource consumption by the plugin**
-* Only shows to the Administrators. For Multisite, it will show the details to each site administrators, but not the network admins
+* Only shows to the Administrators. For Multi-site, it will show the details to each site administrators, but not the network admins
 * Option to change the realtime script refresh interval (default: 200ms), colour scheme, Memcached host and port details from the WP Server Stats - General Settings Page
 * Automatically removes all the data added by this plugin to your WordPress database upon uninstallation of the plugin
 
@@ -91,7 +94,7 @@ WP Server Stats is 100% compatible with translation and you can translate any te
 
 The list of people whom I especially want to thank without whom this plugin would have never been completed.
 
-* Justin Catello from [BigScoots Hosting](https://www.isaumya.com/refer/bigscoots) - Looking for quality managed SSD hosting? Go with [BigScoot Hosting](http://www.bigscoots.com/portal/?affid=261) keeping your eye closed. They are that much good.
+* Justin Catello from [BigScoots Hosting](https://www.bigscoots.com/portal/?affid=261) - Looking for quality managed SSD hosting? Go with [BigScoot Hosting](https://www.bigscoots.com/portal/?affid=261) keeping your eye closed. They are that much good.
 * [Pippin Williamson](https://twitter.com/pippinsplugins) from [Easy Digital Download](https://easydigitaldownloads.com/)
 * [Justin Kimbrell](https://twitter.com/justin_kimbrell) for [FlipClock.js](http://flipclockjs.com/)
 * Alex Rabe
@@ -101,7 +104,7 @@ The list of people whom I especially want to thank without whom this plugin woul
 
 **Support the Plugin**
 
-If you like this plugin please don't forget to write a review and if possible please [Donate some amount](http://donate.isaumya.com/) to keep the plugin and it's development alive.
+If you like this plugin please don't forget to write a review and if possible please [Donate some amount](https://paypal.me/acnamhq) to keep the plugin and it's development alive.
 
 == Screenshots ==
 
@@ -141,6 +144,40 @@ If you are still seeing that option, please clear all kind of cache you have on 
 **IP096T** - Your server is not returning the IP properly. There is definitely some issue with your server configuration. Please contact your host and tell then that PHP `gethostbyname( gethostname() )` is unable to get the server IP, ask them to look into their server configuration and to fix the configuration issue. If you have a self-hosted VPS or dedicated server, the reason is still the same. If you are unable to find the configuration issue inside your server, I highly suggest you hire a knowledgeable server admin to look into your server. In most cases, you should never get this error message.
 
 == Changelog ==
+
+= 1.8.0, July 1, 2024 =
+* Pushing update that holds proper code without any garbage code added by the hacker who hacked my account to push malware via this plugin.
+* Added escape to many data that is being shown by the plugin to strengthening the code security.
+
+= 1.7.5, January 3, 2024 =
+* Fixed CSRF vulnerability & removed unnecessary script as reported by [Plugin Vulnerabilities](https://www.pluginvulnerabilities.com/wordpress-plugin-security-reviews/).
+
+= 1.7.4, December 29, 2023 =
+* Fixed CSRF vulnerability (CVSS 3.1 score) reported by [Patchstack](https://patchstack.com/).
+
+= 1.7.3, February 28, 2023 =
+* Updated donation link. Please consider donating for this plugin.
+
+= 1.7.2, February 28, 2023 =
+* Strengthening the plugin security to ensure PHP object injection cannot happen. 
+
+= 1.7.1, February 27, 2023 =
+* Escaping the data that is being received from IP API
+
+= 1.7.0, August 18, 2022 =
+* Fixed security vulnerability. Thanks to [WPScan](https://wpscan.com/) Team for reporting it.
+
+= 1.6.10, January 5, 2021 =
+* Added support for 32 CPU core count. Thanks to [@theendfear](https://profiles.wordpress.org/theendfear/)
+
+= 1.6.9.1, August 31, 2020 =
+* Updated the Donation Flow inside the plugin settings page
+
+= 1.6.9, June 29, 2020 =
+* Added new contributor - [Acnam Infotech](https://acnam.com)
+* Updated the donation link
+* Updated tested up to WP v5.5
+* Added requires PHP to PHP 7.0
 
 = 1.6.8, September 25, 2019 =
 * Made sure that the real-time RAM usage data is more accurate across all systems. Special thanks to [@razvanfatu](https://github.com/razvanfatu).

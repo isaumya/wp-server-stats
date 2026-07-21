@@ -1,0 +1,100 @@
+name: 'Plugin Release'
+
+on:
+  release:
+    types: [released]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (skip final SVN commit)'
+        type: boolean
+        default: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      plugin_slug: wp-server-stats
+      plugin_file: wp-server-stats.php
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify tag matches plugin version
+        if: github.event_name == 'release'
+        run: |
+          PLUGIN_VERSION=$(grep '^Version:' "${{ env.plugin_file }}" | sed -E 's/.*: *([0-9.]+).*/\1/')
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          if [[ "$PLUGIN_VERSION" != "$TAG_VERSION" ]]; then
+            echo "❌ Plugin header version ($PLUGIN_VERSION) does not match release tag ($TAG_VERSION)"
+            exit 1
+          fi
+          echo "✅ Plugin version $PLUGIN_VERSION matches tag $TAG_VERSION"
+
+      - name: Extract Plugin Version and Requires PHP
+        run: |
+          PLUGIN_VERSION=$(grep '^Version:' "${{ env.plugin_file }}" | sed -E 's/.*: *([0-9.]+).*/\1/')
+          REQUIRES_PHP=$(grep '^Requires PHP:' "${{ env.plugin_file }}" | sed -E 's/.*: *([0-9.]+).*/\1/')
+          echo "PLUGIN_VERSION=$PLUGIN_VERSION" >> "$GITHUB_ENV"
+          echo "REQUIRES_PHP=$REQUIRES_PHP" >> "$GITHUB_ENV"
+          echo "✅ Plugin Version: $PLUGIN_VERSION | Requires PHP: $REQUIRES_PHP"
+
+      - name: Fetch Latest WordPress Version
+        run: |
+          LATEST_WP_VERSION=$(curl -s 'https://api.wordpress.org/core/version-check/1.7/' | jq -r '.offers[0].version')
+          if [[ -z "$LATEST_WP_VERSION" || "$LATEST_WP_VERSION" == "null" ]]; then
+            echo "❌ Failed to fetch latest WordPress version"
+            exit 1
+          fi
+          echo "LATEST_WP_VERSION=$LATEST_WP_VERSION" >> "$GITHUB_ENV"
+          echo "✅ Latest WordPress version: $LATEST_WP_VERSION"
+
+      - name: Sync readme.txt metadata
+        run: |
+          sed -i -E "s/^Tested up to:.*/Tested up to: ${{ env.LATEST_WP_VERSION }}/" readme.txt
+          sed -i -E "s/^Requires PHP:.*/Requires PHP: ${{ env.REQUIRES_PHP }}/" readme.txt
+          echo "✅ readme.txt: Tested up to ${{ env.LATEST_WP_VERSION }}, Requires PHP ${{ env.REQUIRES_PHP }}"
+
+      - name: Setup PHP with WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: wp-cli
+
+      - name: Configure WP-CLI dist-archive-command
+        env:
+          GITHUB_TOKEN: ""
+          COMPOSER_AUTH: ""
+          COMPOSER_HOME: ${{ runner.temp }}/composer
+        run: wp package install wp-cli/dist-archive-command:v3.1.0
+
+      - name: Create Plugin ZIP
+        # NOTE: the "./" prefix is required. dist-archive-command special-cases a bare
+        # filename target (no directory component) and places the archive in the PARENT
+        # of the source directory instead of the current directory - see get_file_paths_and_names()
+        # in https://github.com/wp-cli/dist-archive-command. Without "./" the zip ends up
+        # outside $GITHUB_WORKSPACE and later steps can't find it.
+        run: wp dist-archive . ./${{ env.plugin_slug }}.zip --plugin-dirname=${{ env.plugin_slug }}
+
+      - name: Deploy to WordPress.org SVN
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          dry-run: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: ${{ env.plugin_slug }}
+          # On workflow_dispatch, GITHUB_REF is a branch (refs/heads/...), not a tag, so the
+          # action can't derive a clean VERSION from it. Force a safe dummy value in that case;
+          # on a real release, leave VERSION unset so the action derives it from the release tag.
+          VERSION: ${{ github.event_name == 'workflow_dispatch' && format('{0}-dryrun-{1}', env.PLUGIN_VERSION, github.run_number) || '' }}
+
+      - name: Save ZIP to Release
+        if: github.event_name == 'release'
+        uses: xresloader/upload-to-github-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "${{ env.plugin_slug }}.zip"
+          tags: true

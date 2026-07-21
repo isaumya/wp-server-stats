@@ -86,10 +86,14 @@ if (is_admin()) {
 
       public function wpss_cache_purge_callback()
       {
-        if (!isset($_POST['wpss_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['prefix_nonce'] ) ), 'wpss_slc_nonce')) {
+        if (!isset($_POST['wpss_nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['wpss_nonce'] ) ), 'wpss_slc_nonce')) {
           die('Permission Check Failed');
         }
-        
+
+        if (!current_user_can('manage_options')) {
+          die('Permission Check Failed');
+        }
+
         global $wpdb; /* this is how you get access to the database */
         /* You cache purge logic should go here. */
         delete_option('wpss_db_advanced_info');

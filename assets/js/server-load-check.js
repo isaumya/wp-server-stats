@@ -151,15 +151,38 @@
 		});
 	}).resize();
 
-	$("li#wp-admin-bar-wpss-cache-purge .ab-item").on("click", function () {
+	$("li#wp-admin-bar-wpss-cache-purge .ab-item").on("click", function (e) {
+		e.preventDefault();
+
+		var $link = $(this);
+
+		if ($link.data('wpss-purging')) {
+			return;
+		}
+
+		if (!window.confirm('Are you sure you want to purge the WP Server Stats cache?')) {
+			return;
+		}
+
+		var original_text = $link.text();
+		$link.data('wpss-purging', true).text('Purging Cache...');
+
 		var data = {
 			'action': 'wpss_cache_purge',
-      'wpss_nonce': server_load_check_vars.server_load_check_nonce
+			'wpss_nonce': server_load_check_vars.server_load_check_nonce
 		};
 
 		/* since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php */
 		$.post(ajaxurl, data, function (response) {
-			alert(response);
+			if (response && response.indexOf('purged successfully') !== -1) {
+				alert('WP Server Stats Cache has been purged successfully!');
+			} else {
+				alert('Failed to purge cache. Please try again.');
+			}
+		}).fail(function () {
+			alert('Failed to purge cache. Please try again.');
+		}).always(function () {
+			$link.data('wpss-purging', false).text(original_text);
 		});
 	});
 

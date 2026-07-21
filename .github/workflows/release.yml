@@ -67,7 +67,7 @@ jobs:
           GITHUB_TOKEN: ""
           COMPOSER_AUTH: ""
           COMPOSER_HOME: ${{ runner.temp }}/composer
-        run: wp package install wp-cli/dist-archive-command:v3.1.0
+        run: wp package install wp-cli/dist-archive-command
 
       - name: Create Plugin ZIP
         # NOTE: the "./" prefix is required. dist-archive-command special-cases a bare

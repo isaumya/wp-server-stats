@@ -7,7 +7,7 @@ README.md
 LICENSE
 .DS_Store
 .claude
-aicp-admin-interface.css
-aicp.js
-jquery.iframetracker.js
-js.cookie.js
+flipclock.css
+wp-server-stats-admin.css
+flipclock.js
+server-load-check.js

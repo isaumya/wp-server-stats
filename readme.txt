@@ -7,9 +7,10 @@ Tags: server, health, stats, information, isaumya
 Requires at least: 5.0
 Requires PHP: 7.4
 Tested up to: 6.5
-Stable Tag: 1.9.0
+Stable Tag: 1.9.1
 
-License: GNU Version 3 or Any Later Version
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Monitor your WP site the right way with most important stats like Database, PHP details, PHP Memory, RAM Usage, CPU load, Server Uptime & more.
 
@@ -144,6 +145,9 @@ If you are still seeing that option, please clear all kind of cache you have on 
 **IP096T** - Your server is not returning the IP properly. There is definitely some issue with your server configuration. Please contact your host and tell then that PHP `gethostbyname( gethostname() )` is unable to get the server IP, ask them to look into their server configuration and to fix the configuration issue. If you have a self-hosted VPS or dedicated server, the reason is still the same. If you are unable to find the configuration issue inside your server, I highly suggest you hire a knowledgeable server admin to look into your server. In most cases, you should never get this error message.
 
 == Changelog ==
+
+= 1.9.0, July 21, 2026 =
+* Fix GPLv2 Licensing issue
 
 = 1.9.0, July 21, 2026 =
 * Improved the "Purge Cache" admin bar option to ask for confirmation before purging, show a "Purging Cache..." status while the request is in progress, and then show a clear success/failure message.

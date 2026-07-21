@@ -601,7 +601,7 @@ if (is_admin()) {
 
         /* If Shell is enablelled then execute the CPU Load, Memory Load, RAM Load and Uptime */
         if ($this->isShellEnabled()) {
-          $cpu_load = trim(shell_exec("echo $((`ps aux|awk 'NR > 0 { s +=$3 }; END {print s}'| cut -d . -f 1` / `cat /proc/cpuinfo | grep cores | grep -o '[0-9]' | wc -l`))"));
+          $cpu_load = trim(shell_exec("echo $((`ps aux|awk 'NR > 0 { s +=$3 }; END {print s}'| cut -d . -f 1` / `cat /proc/cpuinfo | grep '^processor' | wc -l`))"));
           $memory_usage_MB = function_exists('memory_get_usage') ? round(memory_get_usage() / 1024 / 1024, 2) : 0;
           $memory_usage_pos = round((($memory_usage_MB / (int)$this->check_memory_limit_cal()) * 100), 0);
           $total_ram_server = (is_numeric($this->check_total_ram()) ? (int) $this->check_total_ram() : 0);

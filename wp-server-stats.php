@@ -5,7 +5,7 @@ Plugin URI: https://wordpress.org/plugins/wp-server-stats/
 Description: Show up the memory limit and current memory usage in the dashboard and admin footer
 Author: Saumya Majumder
 Author URI: https://isaumya.com/
-Version: 1.8.0
+Version: 1.9.0
 Requires PHP: 7.4.0
 Text Domain: wp-server-stats
 License: GPLv2 or later
